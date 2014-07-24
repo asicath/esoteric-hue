@@ -6,20 +6,20 @@ hue.init(function() {
 
 
 var colors = [
-    {name: 'red',       hue: 0,     sat: 255, bri: 245},
-    {name: 'orange',    hue: 3000,  sat: 255, bri: 255},
-    {name: 'yellow',    hue: 10000, sat: 255, bri: 255},
-    {name: 'green',     hue: 25500, sat: 255, bri: 255},
-    {name: 'blue',      hue: 44750, sat: 255, bri: 255},
-    {name: 'indigo',    hue: 47100, sat: 255, bri: 255},
-    {name: 'violet',    hue: 48400, sat: 255, bri: 255}
+    {name: 'scarlet - mars',       hue: 0,     sat: 255, bri: 245}, // mars,
+    {name: 'orange - sol',    hue: 3000,  sat: 255, bri: 255}, // sol
+    {name: 'yellow - mercury',    hue: 10000, sat: 255, bri: 255}, // mercury
+    {name: 'emerald green - venus',     hue: 25500, sat: 255, bri: 255}, // venus
+    {name: 'blue - luna',      hue: 44750, sat: 255, bri: 255}, // luna
+    {name: 'indigo - saturn',    hue: 47100, sat: 255, bri: 150}, // saturn
+    {name: 'violet - jupiter',    hue: 48400, sat: 255, bri: 255} // jupiter
 ];
 
-var transitionTime = 10000;
-var holdTime = 60000;
+var transitionTime = 1000;
+var holdTime = 6000;
 
 var first = true;
-var colorIndex = 0;
+var colorIndex = 4;
 
 var next = function() {
     colorIndex = (colorIndex + 1) % colors.length;

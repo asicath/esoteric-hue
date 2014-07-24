@@ -18,7 +18,7 @@ var colors = [
     {name: 'violet',    hue: 48400, sat: 255, bri: 255}
 ];
 
-var transitionTime = 2000;
+var transitionTime = 30000;
 
 var swap = function(index, first, colorIndex) {
 

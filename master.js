@@ -223,9 +223,11 @@ var setAll = function(hue, bri, sat, time) {
     var maxHue = 65535;
     if (hue > maxHue) {hue -= maxHue;}
     if (hue < 0) {hue += maxHue;}
+
     var maxBri = 255;
     if (bri > maxBri) {bri = maxBri;}
     if (bri < 0) {bri = 0;}
+
     var maxSat = 255;
     if (sat > maxSat) {sat = maxSat;}
     if (sat < 0) {sat = 0;}
