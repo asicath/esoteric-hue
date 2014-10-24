@@ -22,8 +22,6 @@ var transitionTime = 30000;
 
 var swap = function(index, first, colorIndex) {
 
-
-
     var state = {
         hue: colors[colorIndex].hue,
         bri: colors[colorIndex].bri,

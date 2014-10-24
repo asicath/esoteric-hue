@@ -37,6 +37,8 @@ var next = function(index) {
 
 };
 
+var baseBright = 180;
+var varient = 20;
 
 var swap = function(index, first) {
 
@@ -44,12 +46,12 @@ var swap = function(index, first) {
 
     if (!last[index] || last[index].low) {
         state.ct = 400;
-        state.bri = 200;
+        state.bri = baseBright;
         last[index] = {high:true};
     }
     else {
         state.ct = 400;
-        state.bri = 180;
+        state.bri = baseBright - varient;
         last[index] = {low:true};
     }
 
