@@ -63,8 +63,6 @@ exports.getXY = function(percent) {
         y: line.start.y + (line.end.y - line.start.y) * linePercent
     };
 
-    console.log(p);
-
     return p;
 };
 
