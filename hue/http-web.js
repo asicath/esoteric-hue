@@ -14,6 +14,18 @@ define(['jquery'], function($) {
         });
     };
 
+    exports.put = function(host, path, data, success, fail) {
+        $.ajax({
+            url: 'http://' + host + path,
+            data: JSON.stringify(data),
+            type: 'PUT'
+        }).done(function(data) {
+            success(data);
+        }).fail(function(e) {
+            if (fail) fail(e);
+        });
+    };
+
     exports.get = function(host, path, data, success, fail) {
         var o = {
             url: 'http://' + host + path,

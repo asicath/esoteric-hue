@@ -58,6 +58,14 @@ requirejs([
         for (var id in hub.lights) {
             log(hub.lights[id].name);
         }
+
+        hub.lights['Living Room W'].setState({on:true});
+        hub.lights['Living Room E'].setState({on:true});
+
+        setTimeout(function() {
+            hub.lights['Living Room W'].setState({on:false});
+            hub.lights['Living Room E'].setState({on:false});
+        }, 1000);
     }
 
     function log(msg) {

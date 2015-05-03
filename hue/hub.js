@@ -114,7 +114,9 @@ define(['http-active', 'hue/light'], function(http, Light) {
                     // on success, create hue objects
 
                     for (var id in data.lights) {
-                        hub.lights[id] = Light.create(hub, id, data.lights[id]);
+                        var light = Light.create(hub, id, data.lights[id]);
+                        //hub.lights[light.id] = light;
+                        hub.lights[light.name] = light;
                     }
 
                     // for now just store the state
@@ -170,6 +172,10 @@ define(['http-active', 'hue/light'], function(http, Light) {
 
             });
         }
+
+        hub.setLightState = function(id, data, success, fail) {
+            http.put(ip, '/api/' + username + '/lights/' + id + '/state', data, success, fail);
+        };
 
     };
 

@@ -11,6 +11,17 @@ define(function() {
 
         light.setState = function(state) {
 
+            // crop data down to just changes for performance
+            var data = state;
+
+            hub.setLightState(id, data,
+                function() {
+
+                },
+                function() {
+
+                }
+            );
         };
 
         return light;
