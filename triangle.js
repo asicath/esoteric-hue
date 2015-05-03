@@ -11,7 +11,7 @@ var points = {
 
 exports.points = points;
 
-exports.getXY = function(percent) {
+exports.getXY = function(percent, saturation) {
 
     percent = percent % 1.0;
 
@@ -58,11 +58,34 @@ exports.getXY = function(percent) {
     // find the XY coordinate
     var linePercent = targetLength / line.length;
     var p = {
+        saturation: 1,
         p: percent,
         x: line.start.x + (line.end.x - line.start.x) * linePercent,
         y: line.start.y + (line.end.y - line.start.y) * linePercent
     };
 
+    if (typeof saturation !== 'undefined') p = desaturate(p, saturation);
+
     return p;
 };
 
+var desaturate = function(p, saturation) {
+
+    // 6500k
+    var center = {
+        x: 0.31569,
+        y: 0.32960
+    };
+
+    var totalLength = lineLength(center, p);
+    var length = (1 - saturation) * totalLength;
+
+    var p2 = {
+        x: p.x + (length / totalLength) * (center.x - p.x),
+        y: p.y + (length / totalLength) * (center.y - p.y),
+        saturation: saturation,
+        p: p.p
+    };
+
+    return p2;
+};

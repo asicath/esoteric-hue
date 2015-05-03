@@ -1,72 +1,39 @@
 var hue = require('./hue.js');
 
 
-var last = [];
 
-hue.init(function() {
-    //swap(1, true);
-    //swap(2, true);
-    //swap(3, true);
-    //swap(4, true);
-    next(1);
-    next(2);
-    next(3);
-    next(4);
-});
 
-var interval = 500;
+var up = {bri: 180, ct:475, interval:500, changePercent: 0.25};
+var down = {bri: 150, ct:475, interval:500, changePercent: 0.25};
 
-var next = function(index) {
+up.next = down;
+down.next = up;
 
-    if (!last[index]) {
-        swap(index, true);
-        return;
+var execute = function(mode, index, send) {
+
+    if (send) {
+        var state = {
+            ct: mode.ct,
+            bri: mode.bri
+        };
+        hue.setLightState(index, state);
+        hue.setLightState(index+1, state);
     }
 
     var p = Math.random();
 
-    if (p < 0.25) {
-        swap(index, false);
-    }
-    else {
-        setTimeout(function() {
-            next(index);
-        }, interval);
-    }
-
-
-};
-
-var baseBright = 180;
-var varient = 20;
-
-var swap = function(index, first) {
-
-    var state = {};
-
-    if (!last[index] || last[index].low) {
-        state.ct = 400;
-        state.bri = baseBright;
-        last[index] = {high:true};
-    }
-    else {
-        state.ct = 400;
-        state.bri = baseBright - varient;
-        last[index] = {low:true};
-    }
-
-    if (first) {
-        state.on = true;
-    }
-
-    console.log(state);
-
-    hue.setLightState(index, state, function() {
-        setTimeout(function() {
-            next(index);
-        }, interval);
-    });
+    setTimeout(function() {
+        if (p < mode.changePercent) {
+            execute(mode.next, index, true);
+        }
+        else {
+            execute(mode, index, false);
+        }
+    }, mode.interval);
 
 };
 
-
+hue.init(function() {
+    execute(up, 1, true);
+    execute(up, 4, true);
+});

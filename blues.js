@@ -3,8 +3,12 @@ var hue = require('./hue.js');
 hue.init(function() {
     swap(1, true);
     swap(2, true);
-    swap(3, true);
+    //swap(3, true);
     swap(4, true);
+    swap(5, true);
+
+    swap(6, true);
+    swap(7, true);
 });
 
 

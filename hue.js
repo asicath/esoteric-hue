@@ -154,10 +154,23 @@ exports.setLightStateByArray = function(states, complete) {
     };
 
     exports.setLightState(1, states[0], waitForFinish);
-    exports.setLightState(3, states[1], waitForFinish);
+    exports.setLightState(2, states[1], waitForFinish);
     exports.setLightState(4, states[2], waitForFinish);
-    exports.setLightState(2, states[3], waitForFinish);
+    exports.setLightState(5, states[3], waitForFinish);
 
+};
+
+exports.setLightStateTemple = function(state, complete) {
+    var finished = 0;
+
+    var waitForFinish = function() {
+        if (++finished == 2) {
+            if (complete) complete();
+        }
+    };
+
+    exports.setLightState(6, state, waitForFinish);
+    exports.setLightState(7, state, waitForFinish);
 };
 
 exports.setLightState = function(id, state, complete, retryCount) {
