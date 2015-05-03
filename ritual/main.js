@@ -13,9 +13,11 @@ requirejs.config({
 });
 
 requirejs([
-    'hue/hub'
+    'hue/hub',
+    'hue/color-xy'
 ], function(
-    Hub
+    Hub,
+    ColorXY
 ) {
 
     var ip;
@@ -59,12 +61,21 @@ requirejs([
             log(hub.lights[id].name);
         }
 
-        hub.lights['Living Room W'].setState({on:true});
-        hub.lights['Living Room E'].setState({on:true});
+        /*
+         r: {x: 0.674, y: 0.322},    // Lower right
+         g: {x: 0.408, y: 0.517},    // Upper center
+         b: {x: 0.168, y: 0.041}     // Lower left
+         */
+
+        var red = ColorXY.create(0.674, 0.322);
+        var blue = ColorXY.create(0.168, 0.041);
+
+        hub.lights['Living Room W'].setState(true, null, red);
+        hub.lights['Living Room E'].setState(true, null, blue);
 
         setTimeout(function() {
-            hub.lights['Living Room W'].setState({on:false});
-            hub.lights['Living Room E'].setState({on:false});
+            hub.lights['Living Room W'].setState(false, null, null);
+            hub.lights['Living Room E'].setState(false, null, null);
         }, 1000);
     }
 

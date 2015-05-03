@@ -9,7 +9,12 @@ define(function() {
         light.name = info.name;
         light.state = info.state;
 
-        light.setState = function(state) {
+        light.setState = function(on, brightness, color) {
+
+            var state = (color !== null) ? color.getState() : {};
+            if (on !== null) state.on = on;
+            if (brightness !== null) state.bri = brightness;
+
 
             // crop data down to just changes for performance
             var data = state;
@@ -27,8 +32,6 @@ define(function() {
         return light;
     };
 
-
-
     return exports;
 });
 
@@ -40,13 +43,17 @@ define(function() {
     {
         "on":false,
         "bri":1,
+        "colormode":"ct",
+
+        "xy":[0.5115,0.415],
+
+        "ct":463,
+
         "hue":13162,
         "sat":211,
+
         "effect":"none",
-        "xy":[0.5115,0.415],
-        "ct":463,
         "alert":"none",
-        "colormode":"ct",
         "reachable":true
     },
     "type":"Extended color light",
