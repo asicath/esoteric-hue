@@ -51,7 +51,13 @@ requirejs([
 
     function onConnect(hub) {
         log('connection successful');
-        log(JSON.stringify(hub));
+        //log(JSON.stringify(hub));
+
+        // success, show all the lights
+
+        for (var id in hub.lights) {
+            log(hub.lights[id].name);
+        }
     }
 
     function log(msg) {

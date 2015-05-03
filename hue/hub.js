@@ -1,4 +1,4 @@
-define(['http-active'], function(http) {
+define(['http-active', 'hue/light'], function(http, Light) {
 
     var exports = {};
 
@@ -70,7 +70,9 @@ define(['http-active'], function(http) {
     // create a hub object
     exports.create = function(ip, success, fail, onNeedToPressButton) {
 
-        var hub = {};
+        var hub = {
+            lights: {}
+        };
 
         init();
 
@@ -111,8 +113,12 @@ define(['http-active'], function(http) {
                 function(data) {
                     // on success, create hue objects
 
+                    for (var id in data.lights) {
+                        hub.lights[id] = Light.create(hub, id, data.lights[id]);
+                    }
+
                     // for now just store the state
-                    hub.connectState = data;
+                    //hub.connectState = data;
 
                     success();
                 },
