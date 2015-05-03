@@ -18,7 +18,15 @@ requirejs([
     Hue
 ) {
 
-    searchAndConnect(function() {}, function() {});
+    var ip;
+
+    searchAndConnect(function() {
+
+        Hue.getLights(ip, function() {}, function() {});
+
+    }, function(error) {
+        log(JSON.stringify(error));
+    });
 
 
     function log(msg) {
@@ -29,11 +37,16 @@ requirejs([
     function searchAndConnect(success, fail) {
         log('searching for hub...');
 
-        Hue.findHub('10.0.0.', function(ip) {
+        Hue.findHub('10.0.0.', function(foundIp) {
+
+            ip = foundIp;
 
             log('hub found: ' + ip + ", connecting...");
 
-            Hue.connect(
+            Hue.getLights(ip, function() {}, function() {});
+
+            /*
+            Hue.createUser(
                 ip,
                 // successful connect
                 function() {
@@ -41,14 +54,15 @@ requirejs([
                     success();
                 },
                 // fail
-                function() {
-                    fail();
+                function(error) {
+                    fail(error);
                 },
                 // need to press button
                 function() {
                     log('press link button');
                 }
             );
+            */
 
         }, function() {
 

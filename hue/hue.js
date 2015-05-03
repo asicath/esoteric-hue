@@ -1,33 +1,74 @@
-define(['http-active'], function(http) {
+define(['hue/http-hue'], function(http) {
 
     var exports = {};
 
-    var username = 'asicath12345';
+    var devicetype = "esoterichue#devicename"; // 0-20 # 0-19 max 40
+    var username = 'esoteric10000';   // 10-40
 
     // search a range of IP address for a hue hub
     exports.findHub = function(range, success, fail) {
-        var number = 0;
         var errorCount = 0;
-        while (number < 255) {
-            var targetIp = range + number;
-            checkIp(targetIp,
-                function(ip) {
-                    // pass it up
-                    success(ip);
-                },
-                // failure
-                function() {
-                    errorCount++;
-                    if (errorCount == 255) {
-                        fail("Could not find hub on range: " + range);
+        var number = 0;
+        var maxNumber = 0;
+        var found = false;
+        var next = function() {
+            maxNumber += 5;
+            while (number < maxNumber && number < 255) {
+
+                // get the next IP
+                var targetIp = range + number;
+
+                // attempt to connect
+                checkIp(targetIp,
+                    function(ip) {
+                        found = true;
+                        // pass it up the chain
+                        success(ip);
+                    },
+                    // failure
+                    function() {
+                        // no need if found on another thread
+                        if (found) return;
+
+                        errorCount++;
+                        if (errorCount == 255) {
+                            fail("Could not find hub on range: " + range);
+                        }
+                        else if (errorCount == maxNumber) {
+                            next();
+                        }
                     }
-                }
-            );
-            number++;
-        }
+                );
+                number++;
+            }
+
+        };
+
+        next();
     };
 
-    exports.connect = function(ip, success, fail, onNeedToPressButton) {
+    // do a simple create user call to see if the ip is a hue hub
+    var checkIp = function(ip, success, fail) {
+
+        http.get(ip, '/api/' + username, null, function() {
+            // return the ip on success
+            success(ip);
+        }, function(e) {
+
+            // just means unauthorized user
+            if (e.length && e[0].error && e[0].error.type == 1) {
+                success(ip);
+            }
+            else {
+                fail(ip);
+            }
+        });
+
+    };
+
+
+
+    exports.createUser = function(ip, success, fail, onNeedToPressButton) {
 
         var sentEvent = false;
 
@@ -50,38 +91,47 @@ define(['http-active'], function(http) {
 
     };
 
-
-    // do a simple create user call to see if the ip is a hue hub
-    var checkIp = function(ip, success, fail) {
-
-        http.post(ip, '/api', {
-            devicetype: "app",
-            username: "esoterichue"
-        }, function() {
-            // return the ip on success
-            success(ip);
-        }, function() {
-            fail(ip);
-        });
-
-    };
-
     var createUser = function(ip, success, fail, onNeedToPressButton) {
-        http.post(ip, '/api', {
-            devicetype: "app",
-            username: "esoterichue#devicename"
-        }, function(data) {
+        http.post(
+            ip,
+            '/api',
+            {
+                devicetype: devicetype,
+                username: username
+            },
 
-            // check the msg
-            if (data.length && data[0].error && data[0].error.type == 1) {
-                onNeedToPressButton();
+            // success
+            function(data) {
+                success(data);
+            },
+
+            // fail
+            function(e) {
+
+                // handle press link button events gracefully
+                if (e.length && e[0].error && e[0].error.type == 101) {
+                    onNeedToPressButton();
+                }
+
+                // otherwise just pass it up
+                else {
+                    fail(e);
+                }
             }
-            else {
-                success();
-            }
+        );
+    };
+
+    exports.getLights = function(ip, success, fail) {
+        http.get(ip, '/api/' + username + '/lights', null, function(data) {
+            var x = data;
+        }, function() {
 
         });
     };
+
+
+
+
 
     return exports;
 });
