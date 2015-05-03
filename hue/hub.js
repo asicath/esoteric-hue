@@ -79,11 +79,7 @@ define(['http-active'], function(http) {
         function init() {
             getFullState(
                 // on success give the hub back
-                function(data) {
-                    // on success, create hue objects
-                    
-                    hub.connectState = data;
-
+                function() {
                     success(hub);
                 },
                 // fail just return the error
@@ -113,7 +109,12 @@ define(['http-active'], function(http) {
                 null,
 
                 function(data) {
-                    success(data); // just for now pass back the raw data
+                    // on success, create hue objects
+
+                    // for now just store the state
+                    hub.connectState = data;
+
+                    success();
                 },
 
                 // otherwise catch the need to create user error
