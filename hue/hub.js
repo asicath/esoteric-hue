@@ -3,7 +3,7 @@ define(['http-active'], function(http) {
     var exports = {};
 
     // search a range of IP address for a hue hub
-    exports.findHub = function(range, success, fail) {
+    exports.find = function(range, success, fail) {
         var errorCount = 0;
         var number = 0;
         var maxNumber = 0;
@@ -66,42 +66,80 @@ define(['http-active'], function(http) {
 
         var hub = {};
 
-        var devicetype = "esoterichue#devicename"; // 0-20 # 0-19 max 40
-        var username = 'esoteric100002';   // 10-40
+        // 0-20 # 0-19 max 40
+        var devicetype = "esoterichue#devicename";
 
-        // it should first try to get configuration, might fail for user
+        // 10-40
+        var username = 'esoteric10000';
 
-        var getFullState = function() {
-            http.get(ip, '/api/' + username, null, function(data) {
+        init();
 
-            }, function() {
+        // init the hub object by first getting configuration and instantiating objects
+        // might need to ask to press the link button
+        function init() {
+            getFullState(
+                // on success give the hub back
+                function() {
+                    success(hub);
+                },
+                // fail just return the error
+                function(e) {
+                    fail(e);
+                },
 
-            });
-        };
+                // need to create user
+                function() {
 
-        hub.createUser = function(ip, success, fail, onNeedToPressButton) {
+                    // send the event up
+                    onNeedToPressButton();
 
-            var sentEvent = false;
+                    // then wait for press
+                    waitForButtonPress(
+                        init, // re init on successful creation of user
+                        fail  // otherwise its just a fail
+                    );
+                }
+            );
+        }
+
+        function getFullState(success, fail, onNeedToCreateUser) {
+            http.get(
+                ip,
+                '/api/' + username,
+                null,
+
+                // on success, create hue objects
+                function(data) {
+                    success(data); // just for now pass back the raw data
+                },
+
+                // otherwise catch the need to create user error
+                function(e) {
+
+                    if (e.length && e[0].error && e[0].error.type == 101) {
+                        onNeedToCreateUser();
+                    }
+                    else {
+                        fail(e);
+                    }
+                }
+            );
+        }
+
+        function waitForButtonPress(success, fail) {
 
             function tryCreate() {
                 // now try to create user
-                createUser(ip, success, fail, function () {
-
-                    // try again in 100ms
+                createUser(success, fail, function () {
+                    // try again soon
                     setTimeout(tryCreate, 300);
-
-                    // send the event up once
-                    if (!sentEvent) {
-                        sentEvent = true;
-                        onNeedToPressButton();
-                    }
                 });
             }
 
             tryCreate();
-        };
+        }
 
-        var createUser = function(ip, success, fail, onNeedToPressButton) {
+        function createUser(success, fail, onNeedToPressButton) {
             http.post(ip, '/api', {
                 devicetype: devicetype,
                 username: username
@@ -121,17 +159,8 @@ define(['http-active'], function(http) {
                 }
 
             });
-        };
+        }
 
-        hub.getLights = function(ip, success, fail) {
-            http.get(ip, '/api/' + username + '/lights', null, function(data) {
-                var x = data;
-            }, function() {
-
-            });
-        };
-
-        return hub;
     };
 
     return exports;
