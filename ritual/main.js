@@ -7,15 +7,17 @@ requirejs.config({
     //never includes a ".js" extension since
     //the paths config could be for a directory.
     paths: {
-        'jquery': 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min'
+        'jquery': 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min',
+        'http-active': 'hue/http-web'
     }
 });
 
 requirejs([
-
+    'hue/hue'
 ], function(
-
+    Hue
 ) {
+
 
 
 });
