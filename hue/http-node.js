@@ -34,4 +34,5 @@ define(['http'], function(http) {
         req.end();
     };
 
+    return exports;
 });

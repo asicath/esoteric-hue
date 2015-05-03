@@ -18,6 +18,45 @@ requirejs([
     Hue
 ) {
 
+    searchAndConnect(function() {}, function() {});
+
+
+    function log(msg) {
+        $('body').append(msg + "<br>");
+    }
+
+
+    function searchAndConnect(success, fail) {
+        log('searching for hub...');
+
+        Hue.findHub('10.0.0.', function(ip) {
+
+            log('hub found: ' + ip + ", connecting...");
+
+            Hue.connect(
+                ip,
+                // successful connect
+                function() {
+                    log('connection successful');
+                    success();
+                },
+                // fail
+                function() {
+                    fail();
+                },
+                // need to press button
+                function() {
+                    log('press link button');
+                }
+            );
+
+        }, function() {
+
+        });
+    }
+
+
+
 
 
 });
