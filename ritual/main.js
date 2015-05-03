@@ -13,63 +13,50 @@ requirejs.config({
 });
 
 requirejs([
-    'hue/hue'
+    'hue/hub'
 ], function(
-    Hue
+    Hub
 ) {
 
     var ip;
 
-    searchAndConnect(function() {
+    findAndConnect('10.0.0.');
 
-        Hue.getLights(ip, function() {}, function() {});
+    function findAndConnect(range) {
+        log('searching for hub...');
 
-    }, function(error) {
-        log(JSON.stringify(error));
-    });
+        Hub.find(
+            range,
+            function (foundIp) {
+                log('hub found: ' + foundIp + ", connecting...");
+                ip = foundIp;
 
+                Hub.create(
+                    ip,
+                    onConnect,
+                    function(e) {
+                        log(JSON.stringify(e));
+                    },
+                    function() {
+                        log('press link button');
+                    }
+                );
+            },
+            function (e) {
+                log(e);
+            }
+        );
+
+    }
+
+    function onConnect(hub) {
+        log('connection successful');
+        log(JSON.stringify(hub));
+    }
 
     function log(msg) {
         $('body').append(msg + "<br>");
     }
-
-
-    function searchAndConnect(success, fail) {
-        log('searching for hub...');
-
-        Hue.findHub('10.0.0.', function(foundIp) {
-
-            ip = foundIp;
-
-            log('hub found: ' + ip + ", connecting...");
-
-            Hue.getLights(ip, function() {}, function() {});
-
-            /*
-            Hue.createUser(
-                ip,
-                // successful connect
-                function() {
-                    log('connection successful');
-                    success();
-                },
-                // fail
-                function(error) {
-                    fail(error);
-                },
-                // need to press button
-                function() {
-                    log('press link button');
-                }
-            );
-            */
-
-        }, function() {
-
-        });
-    }
-
-
 
 
 

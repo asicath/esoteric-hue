@@ -2,6 +2,12 @@ define(['http-active'], function(http) {
 
     var exports = {};
 
+    // 0-20 # 0-19 max 40
+    var devicetype = "esoterichue#devicename";
+
+    // 10-40
+    var username = 'esoteric10000';
+
     // search a range of IP address for a hue hub
     exports.find = function(range, success, fail) {
         var errorCount = 0;
@@ -66,12 +72,6 @@ define(['http-active'], function(http) {
 
         var hub = {};
 
-        // 0-20 # 0-19 max 40
-        var devicetype = "esoterichue#devicename";
-
-        // 10-40
-        var username = 'esoteric10000';
-
         init();
 
         // init the hub object by first getting configuration and instantiating objects
@@ -79,7 +79,11 @@ define(['http-active'], function(http) {
         function init() {
             getFullState(
                 // on success give the hub back
-                function() {
+                function(data) {
+                    // on success, create hue objects
+                    
+                    hub.connectState = data;
+
                     success(hub);
                 },
                 // fail just return the error
@@ -108,7 +112,6 @@ define(['http-active'], function(http) {
                 '/api/' + username,
                 null,
 
-                // on success, create hue objects
                 function(data) {
                     success(data); // just for now pass back the raw data
                 },
