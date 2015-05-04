@@ -67,9 +67,66 @@ requirejs([
          b: {x: 0.168, y: 0.041}     // Lower left
          */
 
-        var red = ColorXY.create(0.674, 0.322);
-        var blue = ColorXY.create(0.168, 0.041);
 
+        // show the lights
+        for (var id in hub.lights) {
+            var light = hub.lights[id];
+            var chk = $('<input type="checkbox" id="chkLight-' + light.id + '" class="lightOption" data-id="' + light.id + '" /><label for="chkLight-' + light.id + '">' + light.name + '</label>');
+            chk.data('light', light);
+
+            var div = $('<div>').append(chk);
+
+            $('#lights').append(div);
+        }
+
+        // show the colors
+        var colors = {};
+        colors.red = ColorXY.create('red', 0.674, 0.322);
+        colors.blue = ColorXY.create('blue', 0.168, 0.041);
+
+        for (var key in colors) {
+            var color = colors[key];
+
+            var rad = $('<input type="radio" name="color" class="colorOption" id="chkColor-' + color.name + '" /><label for="chkColor-' + color.name + '">' + color.name + '</label>');
+            rad.data('color', color);
+
+            var div = $('<div>').append(rad);
+
+            $('#colors').append(div);
+        }
+
+        $('#setColors').on('click', function() {
+
+            var rad = $('.colorOption:checked');
+            var chks = $('.lightOption:checked');
+
+            if (rad.length == 0 || chks.length == 0) return;
+
+            var color = $(rad[0]).data('color');
+            var bri = +$('#bri').val();
+
+            for (var i = 0; i < chks.length; i++) {
+                var light = $(chks[i]).data('light');
+                hub.lights[light.name].setState(true, bri, color);
+            }
+
+        });
+
+        $('#turnOff').on('click', function() {
+
+            var chks = $('.lightOption:checked');
+
+            if (chks.length == 0) return;
+
+            for (var i = 0; i < chks.length; i++) {
+                var light = $(chks[i]).data('light');
+                hub.lights[light.name].setState(false, null, null);
+            }
+
+        });
+
+
+        /*
         hub.lights['Living Room W'].setState(true, null, red);
         hub.lights['Living Room E'].setState(true, null, blue);
 
@@ -77,10 +134,12 @@ requirejs([
             hub.lights['Living Room W'].setState(false, null, null);
             hub.lights['Living Room E'].setState(false, null, null);
         }, 1000);
+        */
     }
 
     function log(msg) {
-        $('body').append(msg + "<br>");
+        //$('body').append(msg + "<br>");
+        console.log(msg);
     }
 
 

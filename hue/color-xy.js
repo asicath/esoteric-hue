@@ -1,9 +1,10 @@
 define(function() {
     var exports = {};
 
-    exports.create = function(x, y) {
+    exports.create = function(name, x, y) {
         var color = {};
 
+        color.name = name;
         color.type = "xy";
 
         color.getState = function() {
