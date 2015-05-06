@@ -9,12 +9,16 @@ define(function() {
         light.name = info.name;
         light.state = info.state;
 
-        light.setState = function(state) {
+        light.setState = function(state, transitionTime) {
 
             // get the full data object
             var data = state.getDataObject();
 
             // crop data down to just changes for better performance
+
+            // add in the transitionTime
+            transitionTime = transitionTime || 0; // default to 0
+            data.transitiontime = transitionTime / 100; // called out in 100ms periods
 
             // now make the call
             hub.setLightState(id, data,
