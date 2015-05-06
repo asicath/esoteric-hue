@@ -74,7 +74,7 @@ define(function() {
     exports.BLUE = exports.createByXY('blue', points.b.x, points.b.y);
 
     // similar to Hue/Saturation, but more precise?
-    exports.createByTriangle = function(percent, saturation) {
+    exports.createByTriangle = function(name, percent, saturation) {
 
         percent = percent % 1.0;
 
@@ -129,7 +129,8 @@ define(function() {
 
         if (typeof saturation !== 'undefined') p = desaturate(p, saturation);
 
-        return p;
+        // finally return an xy
+        return exports.createByXY(name, p.x, p.y);
     };
 
     function desaturate(p, saturation) {
