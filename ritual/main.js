@@ -14,10 +14,10 @@ requirejs.config({
 
 requirejs([
     'hue/hub',
-    'hue/color-xy'
+    'hue/color'
 ], function(
     Hub,
-    ColorXY
+    Color
 ) {
 
     var ip;
@@ -61,13 +61,6 @@ requirejs([
             log(hub.lights[id].name);
         }
 
-        /*
-         r: {x: 0.674, y: 0.322},    // Lower right
-         g: {x: 0.408, y: 0.517},    // Upper center
-         b: {x: 0.168, y: 0.041}     // Lower left
-         */
-
-
         // show the lights
         for (var id in hub.lights) {
             var light = hub.lights[id];
@@ -81,8 +74,8 @@ requirejs([
 
         // show the colors
         var colors = {};
-        colors.red = ColorXY.create('red', 0.674, 0.322);
-        colors.blue = ColorXY.create('blue', 0.168, 0.041);
+        colors.red = Color.RED;
+        colors.blue = Color.BLUE;
 
         for (var key in colors) {
             var color = colors[key];
