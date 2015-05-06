@@ -9,16 +9,14 @@ define(function() {
         light.name = info.name;
         light.state = info.state;
 
-        light.setState = function(on, brightness, color) {
+        light.setState = function(state) {
 
-            var state = (color !== null) ? color.getState() : {};
-            if (on !== null) state.on = on;
-            if (brightness !== null) state.bri = brightness;
+            // get the full data object
+            var data = state.getDataObject();
 
+            // crop data down to just changes for better performance
 
-            // crop data down to just changes for performance
-            var data = state;
-
+            // now make the call
             hub.setLightState(id, data,
                 function() {
 

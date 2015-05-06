@@ -12,10 +12,10 @@ define(function() {
         var color = {};
 
         color.name = name;
+        color.colormode = "xy";
 
         color.getState = function() {
             return {
-                colormode: "xy",
                 xy: [x,y]
             };
         };
@@ -27,10 +27,10 @@ define(function() {
         var color = {};
 
         color.name = name;
+        color.colormode = "ct";
 
         color.getState = function() {
             return {
-                colormode:"ct",
                 ct: ct
             };
         };
@@ -42,10 +42,10 @@ define(function() {
         var color = {};
 
         color.name = name;
+        color.colormode = "hs";
 
         color.getState = function() {
             return {
-                colormode: "hs",
                 hue: hue,
                 sat: saturation
             };

@@ -14,10 +14,12 @@ requirejs.config({
 
 requirejs([
     'hue/hub',
-    'hue/color'
+    'hue/color',
+    'hue/state'
 ], function(
     Hub,
-    Color
+    Color,
+    State
 ) {
 
     var ip;
@@ -100,7 +102,9 @@ requirejs([
 
             for (var i = 0; i < chks.length; i++) {
                 var light = $(chks[i]).data('light');
-                hub.lights[light.name].setState(true, bri, color);
+
+                var state = State.create(true, bri, color);
+                hub.lights[light.name].setState(state);
             }
 
         });
@@ -113,7 +117,9 @@ requirejs([
 
             for (var i = 0; i < chks.length; i++) {
                 var light = $(chks[i]).data('light');
-                hub.lights[light.name].setState(false, null, null);
+
+                var state = State.create(false, null, null);
+                hub.lights[light.name].setState(state);
             }
 
         });
