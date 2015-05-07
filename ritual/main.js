@@ -14,10 +14,12 @@ requirejs.config({
 
 requirejs([
     'hue/hub',
-    'hue/color-xy'
+    'hue/color',
+    'hue/state'
 ], function(
     Hub,
-    ColorXY
+    Color,
+    State
 ) {
 
     var ip;
@@ -61,13 +63,6 @@ requirejs([
             log(hub.lights[id].name);
         }
 
-        /*
-         r: {x: 0.674, y: 0.322},    // Lower right
-         g: {x: 0.408, y: 0.517},    // Upper center
-         b: {x: 0.168, y: 0.041}     // Lower left
-         */
-
-
         // show the lights
         for (var id in hub.lights) {
             var light = hub.lights[id];
@@ -81,8 +76,8 @@ requirejs([
 
         // show the colors
         var colors = {};
-        colors.red = ColorXY.create('red', 0.674, 0.322);
-        colors.blue = ColorXY.create('blue', 0.168, 0.041);
+        colors.red = Color.RED;
+        colors.blue = Color.BLUE;
 
         for (var key in colors) {
             var color = colors[key];
@@ -107,7 +102,9 @@ requirejs([
 
             for (var i = 0; i < chks.length; i++) {
                 var light = $(chks[i]).data('light');
-                hub.lights[light.name].setState(true, bri, color);
+
+                var state = State.create(true, bri, color);
+                hub.lights[light.name].setState(state);
             }
 
         });
@@ -120,7 +117,9 @@ requirejs([
 
             for (var i = 0; i < chks.length; i++) {
                 var light = $(chks[i]).data('light');
-                hub.lights[light.name].setState(false, null, null);
+
+                var state = State.create(false, null, null);
+                hub.lights[light.name].setState(state);
             }
 
         });
