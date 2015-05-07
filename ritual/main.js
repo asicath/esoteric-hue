@@ -104,7 +104,7 @@ requirejs([
                 var light = $(chks[i]).data('light');
 
                 var state = State.create(true, bri, color);
-                hub.lights[light.name].setState(state);
+                hub.lights[light.name].setState({state: state});
             }
 
         });
@@ -119,7 +119,7 @@ requirejs([
                 var light = $(chks[i]).data('light');
 
                 var state = State.create(false, null, null);
-                hub.lights[light.name].setState(state);
+                hub.lights[light.name].setState({state: state});
             }
 
         });

@@ -2,44 +2,44 @@ define(['jquery'], function($) {
 
     var exports = {};
 
-    exports.post = function(host, path, data, success, fail) {
+    exports.post = function(a) {
         $.ajax({
-            url: 'http://' + host + path,
-            data: JSON.stringify(data),
+            url: 'http://' + a.host + a.path,
+            data: JSON.stringify(a.data),
             type: 'POST'
         }).done(function(data) {
-            success(data);
+            if (a.success) a.success(data);
         }).fail(function(e) {
-            if (fail) fail(e);
+            if (a.fail) a.fail(e);
         });
     };
 
-    exports.put = function(host, path, data, success, fail) {
+    exports.put = function(a) {
         $.ajax({
-            url: 'http://' + host + path,
-            data: JSON.stringify(data),
+            url: 'http://' + a.host + a.path,
+            data: JSON.stringify(a.data),
             type: 'PUT'
         }).done(function(data) {
-            success(data);
+            if (a.success) a.success(data);
         }).fail(function(e) {
-            if (fail) fail(e);
+            if (a.fail) a.fail(e);
         });
     };
 
-    exports.get = function(host, path, data, success, fail) {
+    exports.get = function(a) {
         var o = {
-            url: 'http://' + host + path,
+            url: 'http://' + a.host + a.path,
             type: 'GET'
         };
 
-        if (data) {
-            o.data = JSON.stringify(data);
+        if (a.data) {
+            o.data = JSON.stringify(a.data);
         }
 
         $.ajax(o).done(function(data) {
-            success(data);
+            if (a.success) a.success(data);
         }).fail(function(e) {
-            fail(e);
+            if (a.fail) a.fail(e);
         });
 
     };

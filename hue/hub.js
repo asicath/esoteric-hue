@@ -1,4 +1,4 @@
-define(['http-active', 'hue/light'], function(http, Light) {
+define(['http-hue', 'hue/light'], function(http, Light) {
 
     var exports = {};
 
@@ -173,8 +173,14 @@ define(['http-active', 'hue/light'], function(http, Light) {
             });
         }
 
-        hub.setLightState = function(id, data, success, fail) {
-            http.put(ip, '/api/' + username + '/lights/' + id + '/state', data, success, fail);
+        hub.setLightState = function(o) {
+            http.put({
+                host: ip,
+                path: '/api/' + username + '/lights/' + o.id + '/state',
+                data: o.data,
+                success: o.success,
+                fail: o.fail
+            });
         };
 
     };
