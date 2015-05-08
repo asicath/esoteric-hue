@@ -1,4 +1,4 @@
-define(['http-hue', 'hue/light'], function(http, Light) {
+define(['hue/http-hue', 'hue/light'], function(http, Light) {
 
     var exports = {};
 
@@ -54,14 +54,20 @@ define(['http-hue', 'hue/light'], function(http, Light) {
     // used to support find hub
     var checkIp = function(ip, success, fail) {
 
-        http.post(ip, '/api', {
-            devicetype: "app",
-            username: username
-        }, function() {
-            // return the ip on success
-            success(ip);
-        }, function() {
-            fail(ip);
+        http.post({
+            host:ip,
+            path: '/api',
+            data: {
+                devicetype: "app",
+                username: username
+            },
+            success: function() {
+                // return the ip on success
+                success(ip);
+            },
+            fail: function() {
+                fail(ip);
+            }
         });
 
     };
@@ -105,12 +111,11 @@ define(['http-hue', 'hue/light'], function(http, Light) {
         }
 
         function getFullState(success, fail, onNeedToCreateUser) {
-            http.get(
-                ip,
-                '/api/' + username,
-                null,
+            http.get({
+                host: ip,
+                path: '/api/' + username,
 
-                function(data) {
+                success: function (data) {
                     // on success, create hue objects
 
                     for (var id in data.lights) {
@@ -126,7 +131,7 @@ define(['http-hue', 'hue/light'], function(http, Light) {
                 },
 
                 // otherwise catch the need to create user error
-                function(e) {
+                fail: function (e) {
 
                     if (e.length && e[0].error && e[0].error.type == 101) {
                         onNeedToCreateUser();
@@ -135,7 +140,7 @@ define(['http-hue', 'hue/light'], function(http, Light) {
                         fail(e);
                     }
                 }
-            );
+            });
         }
 
         function waitForButtonPress(success, fail) {
@@ -152,24 +157,28 @@ define(['http-hue', 'hue/light'], function(http, Light) {
         }
 
         function createUser(success, fail, onNeedToPressButton) {
-            http.post(ip, '/api', {
-                devicetype: devicetype,
-                username: username
-            }, function(data) {
-
-                // check the msg
-                if (data.length && data[0].error) {
-                    if (data[0].error.type == 101) {
-                        onNeedToPressButton();
-                    }
-                    else {
-                        fail(data[0].error);
-                    }
-                }
-                else {
+            http.post({
+                host: ip,
+                path: '/api',
+                data: {
+                    devicetype: devicetype,
+                    username: username
+                },
+                success: function(data) {
                     success();
+                },
+                fail: function(e) {
+                    // check the msg
+                    if (e.length && e[0].error) {
+                        if (e[0].error.type == 101) {
+                            onNeedToPressButton();
+                        }
+                        else {
+                            fail(e[0].error);
+                        }
+                    }
+                    fail(e);
                 }
-
             });
         }
 
