@@ -76,11 +76,6 @@ requirejs([
         }
 
 
-
-
-
-
-
         var viewModel = {
             lights: hub.lights,
             colors: colors
@@ -88,18 +83,6 @@ requirejs([
 
         $('body').html(template(viewModel));
 
-
-
-        for (var key in colors) {
-            var color = colors[key];
-
-            var rad = $('');
-            rad.data('color', color);
-
-            var div = $('<div>').append(rad);
-
-            $('#colors').append(div);
-        }
 
         $('#setColors').on('click', function() {
 
@@ -137,24 +120,15 @@ requirejs([
             if (chks.length == 0) return;
 
             for (var i = 0; i < chks.length; i++) {
-                var light = $(chks[i]).data('light');
+                var lightId = $(chks[i]).data('id');
+                var light = hub.lights[lightId];
 
                 var state = State.create(false, null, null);
-                hub.lights[light.name].setState({state: state});
+                light.setState({state: state});
             }
 
         });
 
-
-        /*
-        hub.lights['Living Room W'].setState(true, null, red);
-        hub.lights['Living Room E'].setState(true, null, blue);
-
-        setTimeout(function() {
-            hub.lights['Living Room W'].setState(false, null, null);
-            hub.lights['Living Room E'].setState(false, null, null);
-        }, 1000);
-        */
     }
 
     function log(msg) {
