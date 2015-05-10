@@ -55,18 +55,26 @@ define(['hue/http-hue', 'hue/light'], function(http, Light) {
     var checkIp = function(ip, success, fail) {
 
         http.post({
-            host:ip,
+            host: ip,
             path: '/api',
             data: {
-                devicetype: "app",
+                devicetype: devicetype,
                 username: username
             },
-            success: function() {
-                // return the ip on success
+            success: function(data) {
                 success(ip);
             },
-            fail: function() {
-                fail(ip);
+            fail: function(e) {
+                // check the msg
+                if (e.length && e[0].error) {
+                    if (e[0].error.type == 101) {
+                        success(ip); // user not created
+                    }
+                    else {
+                        fail(e[0].error);
+                    }
+                }
+                fail(e);
             }
         });
 

@@ -9,15 +9,15 @@ define(['http-active'], function(http) {
             success: function (data) {
                 // catch hue errors, they should be calling back on the success
                 if (data.length && data[0].error) {
-                    o.fail(data);
+                    if (o.fail) o.fail(data);
                 }
                 else {
-                    o.success();
+                    if (o.success) o.success(data);
                 }
             },
             // on a simple fail, just pass through
             fail: function (e) {
-                o.fail(e);
+                if (o.fail) o.fail(e);
             }
         });
     };
@@ -30,15 +30,15 @@ define(['http-active'], function(http) {
             success: function (data) {
                 // catch hue errors, they should be calling back on the success
                 if (data.length && data[0].error) {
-                    o.fail(data);
+                    if (o.fail) o.fail(data);
                 }
                 else {
-                    o.success();
+                    if (o.success) o.success(data);
                 }
             },
             // on a simple fail, just pass through
             fail: function (e) {
-                o.fail(e);
+                if (o.fail) o.fail(e);
             }
         });
     };
@@ -52,15 +52,15 @@ define(['http-active'], function(http) {
             success: function (data) {
                 // catch hue errors, they should be calling back on the success
                 if (data.length && data[0].error) {
-                    o.fail(data);
+                    if (o.fail) o.fail(data);
                 }
                 else {
-                    o.success();
+                    if (o.success) o.success(data);
                 }
             },
             // on a simple fail, just pass through
             fail: function (e) {
-                o.fail(e);
+                if (o.fail) o.fail(e);
             }
         });
     };
