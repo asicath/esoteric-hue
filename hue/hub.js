@@ -128,8 +128,8 @@ define(['hue/http-hue', 'hue/light'], function(http, Light) {
 
                     for (var id in data.lights) {
                         var light = Light.create(hub, id, data.lights[id]);
-                        //hub.lights[light.id] = light;
-                        hub.lights[light.name] = light;
+                        hub.lights[light.id] = light;
+                        //hub.lights[light.name] = light;
                     }
 
                     // for now just store the state
@@ -150,6 +150,13 @@ define(['hue/http-hue', 'hue/light'], function(http, Light) {
                 }
             });
         }
+
+        hub.getLightByName = function(name) {
+            for (var id in hub.lights) {
+                if (hub.lights[id].name == name) return hub.lights[id];
+            }
+            return null;
+        };
 
         function waitForButtonPress(success, fail) {
 

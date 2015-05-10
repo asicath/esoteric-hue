@@ -15,15 +15,27 @@ requirejs.config({
 requirejs([
     'hue/hub',
     'hue/color',
-    'hue/state'
+    'hue/state',
+    'handlebars'
 ], function(
     Hub,
     Color,
-    State
+    State,
+    Handlebars
 ) {
 
     var ip;
 
+    // handlebars
+    var template = Handlebars.compile($("#main-template").html());
+
+    // load the colors
+    var colors = {};
+    colors[Color.RED.id] = Color.RED;
+    colors[Color.GREEN.id] = Color.GREEN;
+    colors[Color.BLUE.id] = Color.BLUE;
+
+    // now find the hub
     findAndConnect('10.0.0.');
 
     function findAndConnect(range) {
@@ -63,26 +75,25 @@ requirejs([
             log(hub.lights[id].name);
         }
 
-        // show the lights
-        for (var id in hub.lights) {
-            var light = hub.lights[id];
-            var chk = $('<input type="checkbox" id="chkLight-' + light.id + '" class="lightOption" data-id="' + light.id + '" /><label for="chkLight-' + light.id + '">' + light.name + '</label>');
-            chk.data('light', light);
 
-            var div = $('<div>').append(chk);
 
-            $('#lights').append(div);
-        }
 
-        // show the colors
-        var colors = {};
-        colors.red = Color.RED;
-        colors.blue = Color.BLUE;
+
+
+
+        var viewModel = {
+            lights: hub.lights,
+            colors: colors
+        };
+
+        $('body').html(template(viewModel));
+
+
 
         for (var key in colors) {
             var color = colors[key];
 
-            var rad = $('<input type="radio" name="color" class="colorOption" id="chkColor-' + color.name + '" /><label for="chkColor-' + color.name + '">' + color.name + '</label>');
+            var rad = $('');
             rad.data('color', color);
 
             var div = $('<div>').append(rad);
@@ -95,16 +106,26 @@ requirejs([
             var rad = $('.colorOption:checked');
             var chks = $('.lightOption:checked');
 
+            // make sure both light and color are selected
             if (rad.length == 0 || chks.length == 0) return;
 
-            var color = $(rad[0]).data('color');
+            // get the color
+            var colorId = $(rad[0]).data('id');
+            var color = colors[colorId];
+
+            // get the brightness
             var bri = +$('#bri').val();
 
+            // set each light to the specified color
             for (var i = 0; i < chks.length; i++) {
-                var light = $(chks[i]).data('light');
 
+                // get the light
+                var lightId = $(chks[i]).data('id');
+                var light = hub.lights[lightId];
+
+                // create and set the state
                 var state = State.create(true, bri, color);
-                hub.lights[light.name].setState({state: state});
+                light.setState({state: state});
             }
 
         });

@@ -5,15 +5,30 @@
 </head>
 <body>
 
-    <div id="lights"></div>
+    <script id="main-template" type="text/x-handlebars-template">
+        <div id="lights">
+            {{#each lights}}
+            <div>
+            <input type="checkbox" id="chkLight-{{id}}" class="lightOption" data-id="{{id}}" />
+            <label for="chkLight-{{id}}">{{name}}</label>
+            </div>
+            {{/each}}
+        </div>
 
-    <div id="colors"></div>
+        <div id="colors">
+            {{#each colors}}
+            <div>
+            <input type="radio" name="color" class="colorOption" id="chkColor-{{id}}" data-id="{{id}}" /><label for="chkColor-{{id}}">{{name}}</label>
+            </div>
+            {{/each}}
+        </div>
 
-    <div>
-        Brightness: <input type="text" id="bri" value="255"/>
-        <input type="button" id="setColors" value="Set Color">
-        <input type="button" id="turnOff" value="Turn Off">
-    </div>
+        <div>
+            Brightness: <input type="text" id="bri" value="255"/>
+            <input type="button" id="setColors" value="Set Color">
+            <input type="button" id="turnOff" value="Turn Off">
+        </div>
+    </script>
 
 </body>
 </html>

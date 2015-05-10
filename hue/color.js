@@ -8,11 +8,14 @@ define(function() {
     exports.CT_MIN = 153;
     exports.CT_MAX = 500;
 
+    var colorId = 0;
+
     exports.createByXY = function(name, x, y) {
         var color = {};
 
         color.name = name;
         color.colormode = "xy";
+        color.id = ++colorId;
 
         color.getState = function() {
             return {
@@ -28,6 +31,7 @@ define(function() {
 
         color.name = name;
         color.colormode = "ct";
+        color.id = ++colorId;
 
         color.getState = function() {
             return {
@@ -43,6 +47,7 @@ define(function() {
 
         color.name = name;
         color.colormode = "hs";
+        color.id = ++colorId;
 
         color.getState = function() {
             return {
