@@ -1,0 +1,140 @@
+requirejs.config({
+    //By default load any module IDs from js/lib
+    baseUrl: '../',
+    //except, if the module ID starts with "app",
+    //load it from the js/app directory. paths
+    //config is relative to the baseUrl, and
+    //never includes a ".js" extension since
+    //the paths config could be for a directory.
+    paths: {
+        'jquery': 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min',
+        'http-active': 'hue/http-web'
+    }
+});
+
+requirejs([
+    'hue/hub',
+    'hue/color',
+    'hue/state',
+    'handlebars'
+], function(
+    Hub,
+    Color,
+    State,
+    Handlebars
+) {
+
+    var ip;
+
+    // handlebars
+    var template = Handlebars.compile($("#main-template").html());
+
+    // load the colors
+    var colors = {};
+    colors[Color.RED.id] = Color.RED;
+    colors[Color.GREEN.id] = Color.GREEN;
+    colors[Color.BLUE.id] = Color.BLUE;
+
+    var o = Hub.createTest();
+    onConnect(o);
+
+    function onConnect(hub) {
+        log('connection successful');
+        //log(JSON.stringify(hub));
+
+        // success, show all the lights
+
+        for (var id in hub.lights) {
+            log(hub.lights[id].name);
+        }
+
+
+
+
+
+
+
+        var viewModel = {
+            lights: hub.lights,
+            colors: colors
+        };
+
+        $('body').html(template(viewModel));
+
+
+
+        for (var key in colors) {
+            var color = colors[key];
+
+            var rad = $('');
+            rad.data('color', color);
+
+            var div = $('<div>').append(rad);
+
+            $('#colors').append(div);
+        }
+
+        $('#setColors').on('click', function() {
+
+            var rad = $('.colorOption:checked');
+            var chks = $('.lightOption:checked');
+
+            // make sure both light and color are selected
+            if (rad.length == 0 || chks.length == 0) return;
+
+            // get the color
+            var colorId = $(rad[0]).data('id');
+            var color = colors[colorId];
+
+            // get the brightness
+            var bri = +$('#bri').val();
+
+            // set each light to the specified color
+            for (var i = 0; i < chks.length; i++) {
+
+                // get the light
+                var lightId = $(chks[i]).data('id');
+                var light = hub.lights[lightId];
+
+                // create and set the state
+                var state = State.create(true, bri, color);
+                light.setState({state: state});
+            }
+
+        });
+
+        $('#turnOff').on('click', function() {
+
+            var chks = $('.lightOption:checked');
+
+            if (chks.length == 0) return;
+
+            for (var i = 0; i < chks.length; i++) {
+                var light = $(chks[i]).data('light');
+
+                var state = State.create(false, null, null);
+                hub.lights[light.name].setState({state: state});
+            }
+
+        });
+
+
+        /*
+        hub.lights['Living Room W'].setState(true, null, red);
+        hub.lights['Living Room E'].setState(true, null, blue);
+
+        setTimeout(function() {
+            hub.lights['Living Room W'].setState(false, null, null);
+            hub.lights['Living Room E'].setState(false, null, null);
+        }, 1000);
+        */
+    }
+
+    function log(msg) {
+        //$('body').append(msg + "<br>");
+        console.log(msg);
+    }
+
+
+
+});
