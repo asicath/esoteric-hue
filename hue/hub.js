@@ -80,6 +80,36 @@ define(['hue/http-hue', 'hue/light'], function(http, Light) {
 
     };
 
+    exports.createTest = function() {
+        var hub = {
+            lights: {}
+        };
+
+        hub.setLightState = function(o) { };
+
+        // create fake lights
+        for (var id = 1; id < 5; id++) {
+            var light = Light.create(hub, id, {
+                name: 'light ' + id,
+                state: {
+                    "on":false,
+                    "bri":1,
+                    "colormode":"ct",
+                    "xy":[0.5115,0.415],
+                    "ct":463,
+                    "hue":13162,
+                    "sat":211,
+                    "effect":"none",
+                    "alert":"none",
+                    "reachable":true
+                }
+            });
+
+            hub.lights[light.name] = light;
+        }
+
+        return hub;
+    };
 
     // create a hub object
     exports.create = function(ip, success, fail, onNeedToPressButton) {
