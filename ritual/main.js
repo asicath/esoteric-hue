@@ -144,6 +144,18 @@ requirejs([
             }
         }
 
+        var rainbow = [
+            State.create(true, 245, Color.createByTriangle("red", 0.00, 1.0)),
+            State.create(true, 255, Color.createByTriangle("orange", 0.05, 1.0)),
+            State.create(true, 255, Color.createByTriangle("yellow", 0.12, 1.0)),
+            State.create(true, 150, Color.createByTriangle("green", 0.2287, 1.0)),
+            State.create(true, 255, Color.createByTriangle("blue", 0.56, 1.0)),
+            State.create(true, 150, Color.createByTriangle("indigo", 0.60, 1.0)),
+            State.create(true, 255, Color.createByTriangle("violet", 0.65, 1.0))
+        ];
+
+
+
         function chase() {
             var lights = getSelectedLights();
             if (lights.length == 0) return;
@@ -151,21 +163,18 @@ requirejs([
             var index = 0;
 
             function next() {
-                var color = colors[(index + 1).toString()];
-
-
-                var state = State.create(true, 10, color);
+                var state = rainbow[index];
 
                 for (var i = 0; i < lights.length; i++) {
                     var light = lights[i];
 
-                    light.setState({state: state});
+                    light.setState({state: state, transitionTime:9000});
                 }
 
                 // setup for next round
-                index = index < 2 ? index + 1 : 0;
+                index = index < (rainbow.length-1) ? index + 1 : 0;
 
-                setTimeout(next, 400);
+                setTimeout(next, 10000);
             }
 
             next();
