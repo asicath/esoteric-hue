@@ -2,33 +2,32 @@
 <head>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="../require.js" data-main="main"></script>
+
 </head>
 <body>
 
-    <script id="main-template" type="text/x-handlebars-template">
-        <div id="lights">
-            {{#each lights}}
-            <div>
+<script id="main-template" type="text/x-handlebars-template">
+    <div id="lights">
+        {{#each lights}}
+        <div>
             <input type="checkbox" id="chkLight-{{id}}" class="lightOption" data-id="{{id}}" />
             <label for="chkLight-{{id}}">{{name}}</label>
-            </div>
-            {{/each}}
         </div>
+        {{/each}}
+    </div>
 
-        <div id="colors">
-            {{#each colors}}
-            <div>
-            <input type="radio" name="color" class="colorOption" id="chkColor-{{id}}" data-id="{{id}}" /><label for="chkColor-{{id}}">{{name}}</label>
-            </div>
-            {{/each}}
-        </div>
+    <div>
+        X: <input type="text" id="x"><br>
+        Y: <input type="text" id="y"><br>
+        Brightness: <input type="text" id="bri" value="255"/><br>
+        <input type="button" id="setColors" value="Set Color"><br>
+        <input type="button" id="turnOff" value="Turn Off">
+    </div>
 
-        <div>
-            Brightness: <input type="text" id="bri" value="255"/>
-            <input type="button" id="setColors" value="Set Color">
-            <input type="button" id="turnOff" value="Turn Off">
-        </div>
-    </script>
+    <div>
+        <canvas id="colorCircle" width="500" height="500"></canvas>
+    </div>
+</script>
 
 </body>
 </html>
