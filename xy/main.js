@@ -59,6 +59,9 @@ requirejs([
 
     }
 
+    var image = new Image();
+    image.src = 'map-weird.jpg';
+
     function onConnect(hub) {
         log('connection successful');
         //log(JSON.stringify(hub));
@@ -79,7 +82,7 @@ requirejs([
         $('#setColors').on('click', setColor);
         $('#turnOff').on('click', turnOff);
 
-
+        drawMap();
 
         function setColor() {
             var chks = $('.lightOption:checked');
@@ -122,6 +125,58 @@ requirejs([
         }
 
     }
+
+
+
+    function drawMap() {
+
+        var width = image.width;
+        var height = image.height;
+
+
+        var canvas = document.getElementById('xyGraph');
+
+        // possible resize of canvas
+        if ($(canvas).attr('width') != width) {
+            $(canvas).attr('width', width);
+            $(canvas).attr('height', height);
+        }
+
+
+
+
+        var ctx = canvas.getContext('2d');
+
+        ctx.mozImageSmoothingEnabled = false;
+        ctx.webkitImageSmoothingEnabled = false;
+        ctx.msImageSmoothingEnabled = false;
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(image, 0, 0);
+
+        // draw triangle
+
+
+
+
+
+        var xScale = width / 0.8;
+        var yScale = height / 0.9;
+
+
+        ctx.strokeStyle = 'black';
+        ctx.beginPath();
+        ctx.moveTo(Color.RED.x * xScale, height - Color.RED.y * yScale);
+        ctx.lineTo(Color.GREEN.x * xScale, height - Color.GREEN.y * yScale);
+        ctx.lineTo(Color.BLUE.x * xScale, height - Color.BLUE.y * yScale);
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.fillStyle = 'black';
+        ctx.beginPath();
+        ctx.arc(Color.CENTER_POINT.x * xScale, height - Color.CENTER_POINT.y * yScale,3,0,2*Math.PI);
+        ctx.fill();
+    }
+
 
     function log(msg) {
         //$('body').append(msg + "<br>");

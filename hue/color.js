@@ -17,6 +17,9 @@ define(function() {
         color.colormode = "xy";
         color.id = ++colorId;
 
+        color.x = x;
+        color.y = y;
+
         color.getState = function() {
             return {
                 xy: [x,y]
@@ -68,15 +71,16 @@ define(function() {
 
     // as defined in the API
     var points = {
-        r: {x: 0.674, y: 0.322},    // Lower right
-        g: {x: 0.408, y: 0.517},    // Upper center
-        b: {x: 0.168, y: 0.041}     // Lower left
+        r: {x: 0.675, y: 0.322},    // Lower right
+        g: {x: 0.409, y: 0.518},    // Upper center
+        b: {x: 0.167, y: 0.04}     // Lower left
     };
 
     // create a color for the three RGB extremities
     exports.RED = exports.createByXY('red', points.r.x, points.r.y);
     exports.GREEN = exports.createByXY('green', points.g.x, points.g.y);
     exports.BLUE = exports.createByXY('blue', points.b.x, points.b.y);
+    exports.CENTER_POINT = {x: 0.31569, y: 0.32960};
 
     // similar to Hue/Saturation, but more precise?
     exports.createByTriangle = function(name, percent, saturation) {
@@ -141,10 +145,7 @@ define(function() {
     function desaturate(p, saturation) {
 
         // 6500k
-        var center = {
-            x: 0.31569,
-            y: 0.32960
-        };
+        var center = exports.CENTER_POINT;
 
         var totalLength = lineLength(center, p);
         var length = (1 - saturation) * totalLength;
