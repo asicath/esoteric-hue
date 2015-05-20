@@ -6,7 +6,7 @@ define(['hue/http-hue', 'hue/light'], function(http, Light) {
     var devicetype = "esoterichue#devicename";
 
     // 10-40
-    var username = 'esoteric10000';
+    var username = 'xxesoteric10000';
 
     // search a range of IP address for a hue hub
     exports.find = function(range, success, fail) {
@@ -14,24 +14,34 @@ define(['hue/http-hue', 'hue/light'], function(http, Light) {
         var number = 0;
         var maxNumber = 0;
         var found = false;
+        var xhr = {};
         var next = function() {
-            maxNumber += 5;
+            maxNumber += 40;
             while (number < maxNumber && number < 255) {
 
                 // get the next IP
                 var targetIp = range + number;
 
                 // attempt to connect
-                checkIp(targetIp,
+                xhr[targetIp] = checkIp(targetIp,
                     function(ip) {
                         found = true;
+
+                        // cancel all the others
+                        for (var key in xhr) {
+                            if (key == ip || !xhr[key]) continue;
+                            http.abort(xhr[key]);
+                        }
+
                         // pass it up the chain
                         success(ip);
                     },
                     // failure
-                    function() {
+                    function(ip) {
                         // no need if found on another thread
                         if (found) return;
+
+                        xhr[ip] = false;
 
                         errorCount++;
                         if (errorCount == 255) {
@@ -54,7 +64,7 @@ define(['hue/http-hue', 'hue/light'], function(http, Light) {
     // used to support find hub
     var checkIp = function(ip, success, fail) {
 
-        http.post({
+        return http.post({
             host: ip,
             path: '/api',
             data: {
@@ -71,10 +81,10 @@ define(['hue/http-hue', 'hue/light'], function(http, Light) {
                         success(ip); // user not created
                     }
                     else {
-                        fail(e[0].error);
+                        fail(ip);
                     }
                 }
-                fail(e);
+                fail(ip);
             }
         });
 
@@ -171,7 +181,7 @@ define(['hue/http-hue', 'hue/light'], function(http, Light) {
                 // otherwise catch the need to create user error
                 fail: function (e) {
 
-                    if (e.length && e[0].error && e[0].error.type == 101) {
+                    if (e.length && e[0].error && e[0].error.type == 1) {
                         onNeedToCreateUser();
                     }
                     else {
@@ -222,7 +232,10 @@ define(['hue/http-hue', 'hue/light'], function(http, Light) {
                             fail(e[0].error);
                         }
                     }
-                    fail(e);
+                    else {
+                        fail(e);
+                    }
+
                 }
             });
         }

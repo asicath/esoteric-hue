@@ -2,7 +2,7 @@ define(['http-active'], function(http) {
     var exports = {};
 
     exports.get = function(o) {
-        http.get({
+        return http.get({
             host: o.host,
             path: o.path,
             data: o.data,
@@ -23,7 +23,7 @@ define(['http-active'], function(http) {
     };
 
     exports.put = function(o) {
-        http.put({
+        return http.put({
             host: o.host,
             path: o.path,
             data: o.data,
@@ -45,7 +45,7 @@ define(['http-active'], function(http) {
 
     exports.post = function(o) {
         // host, path, data, success, fail
-        http.post({
+        return http.post({
             host: o.host,
             path: o.path,
             data: o.data,
@@ -63,6 +63,10 @@ define(['http-active'], function(http) {
                 if (o.fail) o.fail(e);
             }
         });
+    };
+
+    exports.abort = function(o) {
+        return http.abort(o);
     };
 
     return exports;

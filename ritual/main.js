@@ -29,6 +29,8 @@ requirejs([
     // handlebars
     var template = Handlebars.compile($("#main-template").html());
 
+    var rangesTemplate = Handlebars.compile($("#ranges-template").html());
+
     // load the colors
     var colors = {};
     colors[Color.RED.id] = Color.RED;
@@ -36,7 +38,17 @@ requirejs([
     colors[Color.BLUE.id] = Color.BLUE;
 
     // now find the hub
-    findAndConnect('10.0.0.');
+    //
+    $('body').html(rangesTemplate({ranges:['10.0.0.', '192.168.0.']}));
+
+    $('input').on('click', function() {
+
+        var range = $(this).val();
+
+        $('body').html('Looking for hub on ' + range + '*');
+
+        findAndConnect(range);
+    });
 
     function findAndConnect(range) {
         log('searching for hub...');
@@ -183,8 +195,8 @@ requirejs([
     }
 
     function log(msg) {
-        //$('body').append(msg + "<br>");
-        console.log(msg);
+        $('body').append(msg + "<br>");
+        //console.log(msg);
     }
 
 

@@ -3,7 +3,7 @@ define(['jquery'], function($) {
     var exports = {};
 
     exports.post = function(a) {
-        $.ajax({
+        return $.ajax({
             url: 'http://' + a.host + a.path,
             data: JSON.stringify(a.data),
             type: 'POST'
@@ -15,7 +15,7 @@ define(['jquery'], function($) {
     };
 
     exports.put = function(a) {
-        $.ajax({
+        return $.ajax({
             url: 'http://' + a.host + a.path,
             data: JSON.stringify(a.data),
             type: 'PUT'
@@ -36,12 +36,20 @@ define(['jquery'], function($) {
             o.data = JSON.stringify(a.data);
         }
 
-        $.ajax(o).done(function(data) {
+        return $.ajax(o).done(function(data) {
             if (a.success) a.success(data);
         }).fail(function(e) {
             if (a.fail) a.fail(e);
         });
 
+    };
+
+    exports.abort = function(xhr) {
+        if (xhr && xhr.readyState != 4){
+            xhr.abort();
+            return true;
+        }
+        return false;
     };
 
     return exports;
