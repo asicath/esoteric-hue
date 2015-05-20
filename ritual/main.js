@@ -39,7 +39,7 @@ requirejs([
 
     // now find the hub
     //
-    $('body').html(rangesTemplate({ranges:['10.0.0.', '192.168.0.']}));
+    $('body').html(rangesTemplate({ranges:['10.0.0.', '192.168.0.', '192.168.1.']}));
 
     $('input').on('click', function() {
 
