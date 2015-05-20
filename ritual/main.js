@@ -32,10 +32,24 @@ requirejs([
     var rangesTemplate = Handlebars.compile($("#ranges-template").html());
 
     // load the colors
-    var colors = {};
-    colors[Color.RED.id] = Color.RED;
-    colors[Color.GREEN.id] = Color.GREEN;
-    colors[Color.BLUE.id] = Color.BLUE;
+    //var colors = {};
+    //colors[Color.RED.id] = Color.RED;
+    //colors[Color.GREEN.id] = Color.GREEN;
+    //colors[Color.BLUE.id] = Color.BLUE;
+
+    var rainbowStates = [
+        State.create(true, 245, Color.createByTriangle("red", 0.00, 1.0)),
+        State.create(true, 255, Color.createByTriangle("orange", 0.05, 1.0)),
+        State.create(true, 255, Color.createByTriangle("yellow", 0.12, 1.0)),
+        State.create(true, 150, Color.createByTriangle("green", 0.2287, 1.0)),
+        State.create(true, 255, Color.createByTriangle("blue", 0.56, 1.0)),
+        State.create(true, 150, Color.createByTriangle("indigo", 0.60, 1.0)),
+        State.create(true, 255, Color.createByTriangle("violet", 0.65, 1.0))
+    ];
+
+    for (var j = 0; j < rainbowStates.length; j++) {
+        rainbowStates[j].index = j;
+    }
 
     // now find the hub
     //
@@ -90,12 +104,12 @@ requirejs([
 
         var viewModel = {
             lights: hub.lights,
-            colors: colors
+            states: rainbowStates
         };
 
         $('body').html(template(viewModel));
 
-        $('#setColors').on('click', setColors);
+        $('.colorButton').on('click', setColor);
         $('#turnOff').on('click', turnOff);
         $('#chase').on('click', chase);
 
@@ -118,21 +132,17 @@ requirejs([
             return a;
         }
 
-        function setColors() {
+        function setColor() {
+
+            chasing = false; //make sure
 
             var lights = getSelectedLights();
 
-            var rad = $('.colorOption:checked');
-
             // make sure both light and color are selected
-            if (rad.length == 0 || lights.length == 0) return;
+            if (lights.length == 0) return;
 
-            // get the color
-            var colorId = $(rad[0]).data('id');
-            var color = colors[colorId];
-
-            // get the brightness
-            var bri = +$('#bri').val();
+            var stateIndex = $(this).data('index');
+            var state = rainbowStates[stateIndex];
 
             // set each light to the specified color
             for (var i = 0; i < lights.length; i++) {
@@ -141,12 +151,13 @@ requirejs([
                 var light = lights[i];
 
                 // create and set the state
-                var state = State.create(true, bri, color);
-                light.setState({state: state});
+                light.setState({state: state, transitionTime:300});
             }
         }
 
         function turnOff() {
+            chasing = false; //make sure
+
             var lights = getSelectedLights();
             if (lights.length == 0) return;
             for (var i = 0; i < lights.length; i++) {
@@ -166,27 +177,36 @@ requirejs([
             State.create(true, 255, Color.createByTriangle("violet", 0.65, 1.0))
         ];
 
-
+        var chasing = false;
 
         function chase() {
             var lights = getSelectedLights();
             if (lights.length == 0) return;
 
             var index = 0;
+            var transition = +$('#transition').val();
+            var transitionTime = transition * 0.9;
+
+
+            chasing = true;
 
             function next() {
+
+                // find stop condition
+                if (!chasing) return;
+
                 var state = rainbow[index];
 
                 for (var i = 0; i < lights.length; i++) {
                     var light = lights[i];
 
-                    light.setState({state: state, transitionTime:9000});
+                    light.setState({state: state, transitionTime:transitionTime});
                 }
 
                 // setup for next round
                 index = index < (rainbow.length-1) ? index + 1 : 0;
 
-                setTimeout(next, 10000);
+                setTimeout(next, transition);
             }
 
             next();
