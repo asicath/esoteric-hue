@@ -99,7 +99,7 @@ requirejs([
         };
     };
 
-    var setState = function(state, filter) {
+    var setState = function(state, filter, transitionTime) {
 
         // if no filter, just set them all
         if (!filter) filter = function(light) {return true;};
@@ -112,21 +112,41 @@ requirejs([
 
         lights = _.filter(lights, filter);
 
+        if (typeof transitionTime === 'undefined') transitionTime = 1000;
+
         for (var i = 0; i < lights.length; i++) {
-            lights[i].setState({state: state, transitionTime:1000});
+            lights[i].setState({state: state, transitionTime:transitionTime});
         }
     };
 
     var pressCount = 0;
     var buttons = [];
 
-    var mainColored = ["Temple 1", "Temple 2", "Center 1", "Center 2", "Center 3"];
-    var altar = ["Temple 1", "Center 1"];
+    var all = [
+        "Temple 1", "Temple 2", "Living Room W", "Living Room E", "Office W", "Office E",
+        "Center 1", "Center 2", "Center 3", "West 1", "West 2", "West 3", "West 4", "East 1", "East 2", "East 3", "East 4"
+    ];
+    var justLux = [
+        "Living Room W", "Living Room E", "Office W", "Office E",
+        "West 1", "West 2", "West 3", "West 4", "East 1", "East 2", "East 3", "East 4"
+    ];
+    var mainColored = [
+        "Temple 1", "Temple 2",
+        "Center 1", "Center 2", "Center 3"
+    ];
+    var altar = [
+        "Temple 1",
+        "Center 1"
+    ];
+    var nonAltar = [
+        "Temple 2",
+        "Center 2", "Center 3"
+    ];
 
     buttons.push({
         text: "Low Light Seating",
         execute: function() {
-            var state = State.create(true, 128, Color.createByCT("norm", 500));
+            var state = State.create(true, 128, Color.createByCT("norm", 497));
             setState(state);
         }
     });
@@ -147,6 +167,9 @@ requirejs([
     buttons.push({
         text: "Dragon Chase",
         execute: function() {
+            var off = State.create(false, null, null);
+            setState(off, allExceptFilter(mainColored));
+
             var bright = State.create(true, 128, Color.createByTriangle("red", 0.00, 1.0));
             setState(bright, onlyFilter(mainColored));
         }
@@ -155,6 +178,9 @@ requirejs([
     buttons.push({
         text: "Luna",
         execute: function() {
+            var off = State.create(false, null, null);
+            setState(off, allExceptFilter(mainColored));
+
             var bright = rainbowStates.blue;
             setState(bright, onlyFilter(mainColored));
         }
@@ -163,6 +189,9 @@ requirejs([
     buttons.push({
         text: "Mercury",
         execute: function() {
+            var off = State.create(false, null, null);
+            setState(off, allExceptFilter(mainColored));
+
             var bright = rainbowStates.yellow;
             setState(bright, onlyFilter(mainColored));
         }
@@ -171,6 +200,9 @@ requirejs([
     buttons.push({
         text: "Venus",
         execute: function() {
+            var off = State.create(false, null, null);
+            setState(off, allExceptFilter(mainColored));
+
             var bright = rainbowStates.green;
             setState(bright, onlyFilter(mainColored));
         }
@@ -179,6 +211,9 @@ requirejs([
     buttons.push({
         text: "Sol",
         execute: function() {
+            var off = State.create(false, null, null);
+            setState(off, allExceptFilter(mainColored));
+
             var bright = rainbowStates.orange;
             setState(bright, onlyFilter(mainColored));
         }
@@ -187,6 +222,9 @@ requirejs([
     buttons.push({
         text: "Mars",
         execute: function() {
+            var off = State.create(false, null, null);
+            setState(off, allExceptFilter(mainColored));
+
             var bright = rainbowStates.red;
             setState(bright, onlyFilter(mainColored));
         }
@@ -195,6 +233,9 @@ requirejs([
     buttons.push({
         text: "Jupiter",
         execute: function() {
+            var off = State.create(false, null, null);
+            setState(off, allExceptFilter(mainColored));
+
             var bright = rainbowStates.violet;
             setState(bright, onlyFilter(mainColored));
         }
@@ -203,6 +244,9 @@ requirejs([
     buttons.push({
         text: "Saturn",
         execute: function() {
+            var off = State.create(false, null, null);
+            setState(off, allExceptFilter(mainColored));
+
             var bright = rainbowStates.indigo;
             setState(bright, onlyFilter(mainColored));
         }
@@ -229,6 +273,11 @@ requirejs([
     buttons.push({
         text: "Rainbow",
         execute: function() {
+
+            // turn others off
+            var off = State.create(false, null, null);
+            setState(off, allExceptFilter(altar));
+
             var press = pressCount;
             var index = 5;
 
@@ -237,11 +286,11 @@ requirejs([
                 if (press != pressCount) return;
 
                 var state = rainbowArray[index];
-                setState(state, onlyFilter(altar));
+                setState(state, onlyFilter(altar), 2000);
 
                 index = (index + 1) % 7;
 
-                setTimeout(next, 1000);
+                setTimeout(next, 2000);
             }
 
             next();
