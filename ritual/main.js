@@ -24,7 +24,7 @@ requirejs([
     Handlebars
 ) {
 
-    var ip;
+    var ip, hub;
 
     // handlebars
     var template = Handlebars.compile($("#main-template").html());
@@ -37,19 +37,15 @@ requirejs([
     //colors[Color.GREEN.id] = Color.GREEN;
     //colors[Color.BLUE.id] = Color.BLUE;
 
-    var rainbowStates = [
-        State.create(true, 245, Color.createByTriangle("red", 0.00, 1.0)),
-        State.create(true, 255, Color.createByTriangle("orange", 0.05, 1.0)),
-        State.create(true, 255, Color.createByTriangle("yellow", 0.12, 1.0)),
-        State.create(true, 150, Color.createByTriangle("green", 0.2287, 1.0)),
-        State.create(true, 255, Color.createByTriangle("blue", 0.56, 1.0)),
-        State.create(true, 150, Color.createByTriangle("indigo", 0.60, 1.0)),
-        State.create(true, 255, Color.createByTriangle("violet", 0.65, 1.0))
-    ];
-
-    for (var j = 0; j < rainbowStates.length; j++) {
-        rainbowStates[j].index = j;
-    }
+    var rainbowStates = {
+        red: State.create(true, 245, Color.createByTriangle("red", 0.00, 1.0)),
+        orange: State.create(true, 255, Color.createByTriangle("orange", 0.05, 1.0)),
+        yellow: State.create(true, 255, Color.createByTriangle("yellow", 0.12, 1.0)),
+        green: State.create(true, 150, Color.createByTriangle("green", 0.2287, 1.0)),
+        blue: State.create(true, 255, Color.createByTriangle("blue", 0.56, 1.0)),
+        indigo: State.create(true, 150, Color.createByTriangle("indigo", 0.60, 1.0)),
+        violet: State.create(true, 255, Color.createByTriangle("violet", 0.65, 1.0))
+    };
 
     // now find the hub
     //
@@ -91,126 +87,191 @@ requirejs([
 
     }
 
-    function onConnect(hub) {
-        log('connection successful');
-        //log(JSON.stringify(hub));
+    var allExceptFilter = function(names) {
+        return function(light) {
+            return !_.contains(names, light.name);
+        };
+    };
 
-        // success, show all the lights
+    var onlyFilter = function(names) {
+        return function(light) {
+            return _.contains(names, light.name);
+        };
+    };
+
+    var setState = function(state, filter) {
+
+        // if no filter, just set them all
+        if (!filter) filter = function(light) {return true;};
+
+        var lights = [];
 
         for (var id in hub.lights) {
-            log(hub.lights[id].name);
+            lights.push(hub.lights[id]);
         }
 
+        lights = _.filter(lights, filter);
 
-        var viewModel = {
-            lights: hub.lights,
-            states: rainbowStates
-        };
-
-        $('body').html(template(viewModel));
-
-        $('.colorButton').on('click', setColor);
-        $('#turnOff').on('click', turnOff);
-        $('#chase').on('click', chase);
-
-        function getSelectedLights() {
-
-            var chks = $('.lightOption:checked');
-
-            var a = [];
-
-            // set each light to the specified color
-            for (var i = 0; i < chks.length; i++) {
-
-                // get the light
-                var lightId = $(chks[i]).data('id');
-                var light = hub.lights[lightId];
-
-                a.push(light);
-            }
-
-            return a;
+        for (var i = 0; i < lights.length; i++) {
+            lights[i].setState({state: state, transitionTime:1000});
         }
+    };
 
-        function setColor() {
+    var pressCount = 0;
+    var buttons = [];
 
-            chasing = false; //make sure
+    var mainColored = ["Temple 1", "Temple 2", "Center 1", "Center 2", "Center 3"];
+    var altar = ["Temple 1", "Center 1"];
 
-            var lights = getSelectedLights();
-
-            // make sure both light and color are selected
-            if (lights.length == 0) return;
-
-            var stateIndex = $(this).data('index');
-            var state = rainbowStates[stateIndex];
-
-            // set each light to the specified color
-            for (var i = 0; i < lights.length; i++) {
-
-                // get the light
-                var light = lights[i];
-
-                // create and set the state
-                light.setState({state: state, transitionTime:300});
-            }
+    buttons.push({
+        text: "Low Light Seating",
+        execute: function() {
+            var state = State.create(true, 128, Color.createByCT("norm", 500));
+            setState(state);
         }
+    });
 
-        function turnOff() {
-            chasing = false; //make sure
+    buttons.push({
+        text: "Opening",
+        execute: function() {
+            var off = State.create(false, null, null);
+            setState(off, allExceptFilter(altar));
 
-            var lights = getSelectedLights();
-            if (lights.length == 0) return;
-            for (var i = 0; i < lights.length; i++) {
-                var light = lights[i];
-                var state = State.create(false, null, null);
-                light.setState({state: state});
-            }
+            var bright = State.create(true, 255, Color.createByCT("white", 153));
+            setState(bright, onlyFilter(altar));
         }
-
-        var rainbow = [
-            State.create(true, 245, Color.createByTriangle("red", 0.00, 1.0)),
-            State.create(true, 255, Color.createByTriangle("orange", 0.05, 1.0)),
-            State.create(true, 255, Color.createByTriangle("yellow", 0.12, 1.0)),
-            State.create(true, 150, Color.createByTriangle("green", 0.2287, 1.0)),
-            State.create(true, 255, Color.createByTriangle("blue", 0.56, 1.0)),
-            State.create(true, 150, Color.createByTriangle("indigo", 0.60, 1.0)),
-            State.create(true, 255, Color.createByTriangle("violet", 0.65, 1.0))
-        ];
-
-        var chasing = false;
-
-        function chase() {
-            var lights = getSelectedLights();
-            if (lights.length == 0) return;
-
-            var index = 0;
-            var transition = +$('#transition').val();
-            var transitionTime = transition * 0.9;
+    });
 
 
-            chasing = true;
+
+    buttons.push({
+        text: "Dragon Chase",
+        execute: function() {
+            var bright = State.create(true, 128, Color.createByTriangle("red", 0.00, 1.0));
+            setState(bright, onlyFilter(mainColored));
+        }
+    });
+
+    buttons.push({
+        text: "Luna",
+        execute: function() {
+            var bright = rainbowStates.blue;
+            setState(bright, onlyFilter(mainColored));
+        }
+    });
+
+    buttons.push({
+        text: "Mercury",
+        execute: function() {
+            var bright = rainbowStates.yellow;
+            setState(bright, onlyFilter(mainColored));
+        }
+    });
+
+    buttons.push({
+        text: "Venus",
+        execute: function() {
+            var bright = rainbowStates.green;
+            setState(bright, onlyFilter(mainColored));
+        }
+    });
+
+    buttons.push({
+        text: "Sol",
+        execute: function() {
+            var bright = rainbowStates.orange;
+            setState(bright, onlyFilter(mainColored));
+        }
+    });
+
+    buttons.push({
+        text: "Mars",
+        execute: function() {
+            var bright = rainbowStates.red;
+            setState(bright, onlyFilter(mainColored));
+        }
+    });
+
+    buttons.push({
+        text: "Jupiter",
+        execute: function() {
+            var bright = rainbowStates.violet;
+            setState(bright, onlyFilter(mainColored));
+        }
+    });
+
+    buttons.push({
+        text: "Saturn",
+        execute: function() {
+            var bright = rainbowStates.indigo;
+            setState(bright, onlyFilter(mainColored));
+        }
+    });
+
+    buttons.push({
+        text: "Abyss",
+        execute: function() {
+            var off = State.create(false, null, null);
+            setState(off);
+        }
+    });
+
+    var rainbowArray = [
+        State.create(true, 245, Color.createByTriangle("red", 0.00, 1.0)),
+        State.create(true, 255, Color.createByTriangle("orange", 0.05, 1.0)),
+        State.create(true, 255, Color.createByTriangle("yellow", 0.12, 1.0)),
+        State.create(true, 150, Color.createByTriangle("green", 0.2287, 1.0)),
+        State.create(true, 255, Color.createByTriangle("blue", 0.56, 1.0)),
+        State.create(true, 150, Color.createByTriangle("indigo", 0.60, 1.0)),
+        State.create(true, 255, Color.createByTriangle("violet", 0.65, 1.0))
+    ];
+
+    buttons.push({
+        text: "Rainbow",
+        execute: function() {
+            var press = pressCount;
+            var index = 5;
 
             function next() {
+                // stop on the next press
+                if (press != pressCount) return;
 
-                // find stop condition
-                if (!chasing) return;
+                var state = rainbowArray[index];
+                setState(state, onlyFilter(altar));
 
-                var state = rainbow[index];
+                index = (index + 1) % 7;
 
-                for (var i = 0; i < lights.length; i++) {
-                    var light = lights[i];
-
-                    light.setState({state: state, transitionTime:transitionTime});
-                }
-
-                // setup for next round
-                index = index < (rainbow.length-1) ? index + 1 : 0;
-
-                setTimeout(next, transition);
+                setTimeout(next, 1000);
             }
 
             next();
         }
+    });
+
+
+    function onConnect(foundHub) {
+        log('connection successful');
+
+        // store for later
+        hub = foundHub;
+
+        // assign the buttons indexes
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].index = i;
+        }
+
+        var viewModel = {
+            buttons: buttons
+        };
+
+        $('body').html(template(viewModel));
+
+        $('.button').on('click', function() {
+            pressCount++;
+            var index = $(this).data('index');
+            var button = buttons[index];
+            button.execute();
+        });
 
     }
 
@@ -222,3 +283,113 @@ requirejs([
 
 
 });
+
+
+
+
+
+
+/*
+ $('.colorButton').on('click', setColor);
+ $('#turnOff').on('click', turnOff);
+ $('#chase').on('click', chase);
+
+ function getSelectedLights() {
+
+ var chks = $('.lightOption:checked');
+
+ var a = [];
+
+ // set each light to the specified color
+ for (var i = 0; i < chks.length; i++) {
+
+ // get the light
+ var lightId = $(chks[i]).data('id');
+ var light = hub.lights[lightId];
+
+ a.push(light);
+ }
+
+ return a;
+ }
+
+ function setColor() {
+
+ chasing = false; //make sure
+
+ var lights = getSelectedLights();
+
+ // make sure both light and color are selected
+ if (lights.length == 0) return;
+
+ var stateIndex = $(this).data('index');
+ var state = rainbowStates[stateIndex];
+
+ // set each light to the specified color
+ for (var i = 0; i < lights.length; i++) {
+
+ // get the light
+ var light = lights[i];
+
+ // create and set the state
+ light.setState({state: state, transitionTime:300});
+ }
+ }
+
+ function turnOff() {
+ chasing = false; //make sure
+
+ var lights = getSelectedLights();
+ if (lights.length == 0) return;
+ for (var i = 0; i < lights.length; i++) {
+ var light = lights[i];
+ var state = State.create(false, null, null);
+ light.setState({state: state});
+ }
+ }
+
+ var rainbow = [
+ State.create(true, 245, Color.createByTriangle("red", 0.00, 1.0)),
+ State.create(true, 255, Color.createByTriangle("orange", 0.05, 1.0)),
+ State.create(true, 255, Color.createByTriangle("yellow", 0.12, 1.0)),
+ State.create(true, 150, Color.createByTriangle("green", 0.2287, 1.0)),
+ State.create(true, 255, Color.createByTriangle("blue", 0.56, 1.0)),
+ State.create(true, 150, Color.createByTriangle("indigo", 0.60, 1.0)),
+ State.create(true, 255, Color.createByTriangle("violet", 0.65, 1.0))
+ ];
+
+ var chasing = false;
+
+ function chase() {
+ var lights = getSelectedLights();
+ if (lights.length == 0) return;
+
+ var index = 0;
+ var transition = +$('#transition').val();
+ var transitionTime = transition * 0.9;
+
+
+ chasing = true;
+
+ function next() {
+
+ // find stop condition
+ if (!chasing) return;
+
+ var state = rainbow[index];
+
+ for (var i = 0; i < lights.length; i++) {
+ var light = lights[i];
+
+ light.setState({state: state, transitionTime:transitionTime});
+ }
+
+ // setup for next round
+ index = index < (rainbow.length-1) ? index + 1 : 0;
+
+ setTimeout(next, transition);
+ }
+
+ next();
+ }
+ */

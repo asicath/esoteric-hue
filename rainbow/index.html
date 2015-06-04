@@ -1,0 +1,57 @@
+<html>
+<head>
+    <script type="text/javascript" src="../jquery.min.js"></script>
+    <script type="text/javascript" src="../require.js" data-main="main"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+
+        #lights, #colors {
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 20px;
+        }
+
+        #lights > div {
+            margin-bottom: 15px;
+        }
+        #colors > div {
+            margin-bottom: 15px;
+        }
+
+        #bri {
+            width: 3em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <script id="main-template" type="text/x-handlebars-template">
+
+        <div id="lights">
+            {{#each lights}}
+            <div>
+            <input type="checkbox" id="chkLight-{{id}}" class="lightOption" data-id="{{id}}" />
+            <label for="chkLight-{{id}}">{{name}}</label>
+            </div>
+            {{/each}}
+        </div>
+
+        <div id="colors">
+            {{#each states}}
+            <div><input type="button" class="colorButton" data-index="{{index}}" value="{{color.name}}" /></div>
+            {{/each}}
+            <div><input type="button" id="turnOff" value="Turn Off"></div>
+            <div><input type="button" id="chase" value="Chase"> <input type="text" id="transition" value="10000"> </div>
+        </div>
+
+    </script>
+
+    <script id="ranges-template" type="text/x-handlebars-template">
+        {{#each ranges}}
+        <input type="button" value="{{this}}"><br><br>
+        {{/each}}
+    </script>
+
+</body>
+</html>
