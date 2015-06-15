@@ -31,6 +31,9 @@ requirejs([
 
     var rangesTemplate = Handlebars.compile($("#ranges-template").html());
 
+    var rev12 = Handlebars.compile($("#rev12-template").html());
+    var rev17 = Handlebars.compile($("#rev17-template").html());
+
     // load the colors
     //var colors = {};
     //colors[Color.RED.id] = Color.RED;
@@ -144,9 +147,17 @@ requirejs([
     ];
 
     buttons.push({
+        text: "Full Light",
+        execute: function() {
+            var state = State.create(true, 255, Color.createByCT("norm", 370));
+            setState(state);
+        }
+    });
+
+    buttons.push({
         text: "Low Light Seating",
         execute: function() {
-            var state = State.create(true, 128, Color.createByCT("norm", 497));
+            var state = State.create(true, 128, Color.createByCT("norm", 370));
             setState(state);
         }
     });
@@ -297,6 +308,32 @@ requirejs([
         }
     });
 
+    $('body').append('loading music...');
+
+    var songs = {
+        haruNoUmi: {url: 'haru_no_umi.mp3'},
+        mahakalaPuja: {url: 'mahakala_puja_crop.mp3'}
+    };
+
+
+
+    var music = {};
+
+    for (var key in songs) {
+        var song = songs[key];
+        var obj = new Audio(song.url);
+        //obj.load();
+        obj.name = key;
+
+
+        $(obj).bind('canplaythrough', function() {
+            $('body').append('complete');
+
+        });
+
+        music[key] = obj;
+    }
+
 
     function onConnect(foundHub) {
         log('connection successful');
@@ -307,20 +344,55 @@ requirejs([
         // assign the buttons indexes
         for (var i = 0; i < buttons.length; i++) {
             buttons[i].index = i;
+            buttons[i].class = 'btn' + buttons[i].text.replace(/ /g, '');
         }
 
         var viewModel = {
             buttons: buttons
         };
 
-        $('body').html(template(viewModel));
+        $('body').html(rev12({}) + template(viewModel) + rev17({}));
+
+        // add sound buttons
+        $('.btnAbyss').after('<div class="music" data-name="haruNoUmi">Haru No Umi</div>');
+        $('.btnAbyss').after('<div class="music" data-name="mahakalaPuja">Mahakala Puja</div>');
+
 
         $('.button').on('click', function() {
+
+            $('.button').css('background-color', '');
+
+            $(this).css('background-color', '#888');
+
             pressCount++;
             var index = $(this).data('index');
             var button = buttons[index];
             button.execute();
         });
+
+        $('.music').on('click', function() {
+            var name = $(this).data('name');
+            var obj = music[name];
+
+            if (typeof obj.playing == 'undefined') {
+                obj.play();
+                obj.playing = true;
+
+            }
+            else if (obj.playing) {
+                obj.pause();
+                //obj.currentTime = 0;
+                obj.playing = false;
+            }
+            else {
+                obj.play();
+                obj.playing = true;
+            }
+
+
+
+        });
+
 
     }
 

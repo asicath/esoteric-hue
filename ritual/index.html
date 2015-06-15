@@ -8,32 +8,76 @@
         body {
             background-color: black;
             color:#fff;
-            font-size: large;
+            font-size: 22px;
+            font-family: verdana, arial, sans-serif;
         }
-        .button {
+        .button, .music {
             cursor: pointer;
             padding: 0.5em;
             border: 0.2em solid white;
             margin-bottom: 1em;
 
+            width:50%;
 
+            background-color: #111;
+
+            font-size: 1.2em;
+        }
+
+        .text {
+            font-size: 1em;
+            margin-bottom: 2em;
+        }
+        .chapter {
+            margin-bottom: 0.5em;
+        }
+        .verse {
+            margin-bottom: 0.5em;
         }
     </style>
 </head>
 <body>
 
     <script id="main-template" type="text/x-handlebars-template">
-
         {{#each buttons}}
-        <div class="button" data-index="{{index}}">{{text}}</div>
+        <div class="button {{class}}" data-index="{{index}}">{{text}}</div>
         {{/each}}
-
     </script>
 
     <script id="ranges-template" type="text/x-handlebars-template">
         {{#each ranges}}
         <input type="button" value="{{this}}"><br><br>
         {{/each}}
+    </script>
+
+    <script id="rev12-template" type="text/x-handlebars-template">
+        <div class="text">
+            <div class="chapter">Revelation 12</div>
+            <div class="verse">1. And there appeared a great wonder in heaven; a woman clothed with the sun, and the moon under her feet, and upon her head a crown of twelve stars:</div>
+            <div class="verse">2. And she being with child cried, travailing in birth, and pained to be delivered.</div>
+            <div class="verse">3. And there appeared another wonder in heaven; and behold a great red dragon, having seven heads and ten horns, and seven crowns upon his heads.</div>
+            <div class="verse">4. And his tail drew the third part of the stars of heaven, and did cast them to the earth: and the dragon stood before the woman which was ready to be delivered, for to devour her child as soon as it was born.</div>
+            <div class="verse">6. And the woman fled into the wilderness, where she hath a place prepared of God, that they should feed her there a thousand two hundred and threescore days.</div>
+            <div class="verse">7. And there was war in heaven: Michael and his angels fought against the dragon; and the dragon fought and his angels,</div>
+            <div class="verse">8. And prevailed not; neither was there place found any more in heaven.</div>
+            <div class="verse">9. And the great dragon was cast out, that old serpent, called the Devil, and Satan, which deceiveth the whole world: he was cast out into the earth, and his angels were cast out with him.</div>
+            <div class="verse">13. And when the dragon saw that he was cast unto the earth, he persecuted the woman which brought forth the man child.</div>
+            <div class="verse">14. And to the woman were given two wings of a great eagle, that she might fly into the wilderness, into her place, where she is nourished for a time, and times, and half a time, from the face of the serpent.</div>
+            <div class="verse">15. And the serpent cast out of his mouth water as a flood after the woman, that he might cause her to be carried away of the flood.</div>
+            <div class="verse">16. And the earth helped the woman, and the earth opened her mouth, and swallowed up the flood which the dragon cast out of his mouth.</div>
+        </div>
+    </script>
+
+    <script id="rev17-template" type="text/x-handlebars-template">
+        <div class="text">
+            <div class="chapter">Revelation 17</div>
+            <div class="verse">1. And there came one of the seven angels which had the seven vials, and talked with me, saying unto me, Come hither; I will shew unto thee the judgment of the great whore that sitteth upon many waters:</div>
+            <div class="verse">2. With whom the kings of the earth have committed fornication, and the inhabitants of the earth have been made drunk with the wine of her fornication.</div>
+            <div class="verse">3. So he carried me away in the spirit into the wilderness: and I saw a woman sit upon a scarlet coloured beast, full of names of blasphemy, having seven heads and ten horns.</div>
+            <div class="verse">4. And the woman was arrayed in purple and scarlet colour, and decked with gold and precious stones and pearls, having a golden cup in her hand full of abominations and filthiness of her fornication:</div>
+            <div class="verse">5. And upon her forehead was a name written, MYSTERY, BABYLON THE GREAT, THE MOTHER OF HARLOTS AND ABOMINATIONS OF THE EARTH.</div>
+            <div class="verse">6. And I saw the woman drunken with the blood of the saints, and with the blood of the martyrs of Jesus: and when I saw her, I wondered with great admiration.</div>
+        </div>
     </script>
 
 </body>
