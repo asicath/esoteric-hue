@@ -58,7 +58,12 @@ requirejs([
 
         var range = $(this).val();
 
-        $('#main').html('Looking for hub on ' + range + '*');
+        if (range == "SKIP") {
+            onConnect({});
+            return;
+        }
+
+        $('body').html('Looking for hub on ' + range + '*');
 
         findAndConnect(range);
     });
@@ -318,6 +323,8 @@ requirejs([
 
 
     var music = {};
+    music.loading = 0;
+    music.loaded = 0;
 
     for (var key in songs) {
         var song = songs[key];
@@ -326,9 +333,11 @@ requirejs([
         var obj = $('#' + key);
 
         //var obj = new Audio(song.url);
-        //obj.load();
+
         //$(this).attr('src')
         obj.name = key;
+
+        music.loading++;
 
 
         $(obj).bind('canplaythrough', function() {
@@ -366,7 +375,7 @@ requirejs([
 
         // add sound buttons
         $('.btnAbyss').after('<div class="music" data-name="haruNoUmi">Haru No Umi</div>');
-        $('.btnAbyss').after('<div class="music" data-name="mahakalaPuja">Mahakala Puja</div>');
+        $('.btnDragonChase').after('<div class="music" data-name="mahakalaPuja">Mahakala Puja</div>');
 
 
         $('.button').on('click', function() {
@@ -382,25 +391,42 @@ requirejs([
         });
 
         $('.music').on('click', function() {
+            if ($(this).hasClass('transition')) return;
+
             var name = $(this).data('name');
             var obj = music[name];
 
             if (typeof obj.playing == 'undefined') {
                 obj.play();
                 obj.playing = true;
-
+                $(this).addClass('active');
             }
             else if (obj.playing) {
-                obj.pause();
-                //obj.currentTime = 0;
-                obj.playing = false;
+                $(this).removeClass('active');
+                $(this).addClass('transition');
+
+                var lower = function(btn, volume) {
+                    setTimeout(function() {
+                        if (volume > 0) {
+                            obj.volume = volume / 100;
+                            lower(btn, volume - 3);
+                        }
+                        else {
+                            obj.pause();
+                            obj.playing = false;
+                            btn.removeClass('transition');
+                        }
+                    }, 100);
+                };
+                lower($(this), 100);
             }
             else {
+                obj.volume = 1;
+                obj.currentTime = 0;
                 obj.play();
                 obj.playing = true;
+                $(this).addClass('active');
             }
-
-
 
         });
 
