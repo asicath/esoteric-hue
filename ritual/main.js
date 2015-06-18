@@ -52,13 +52,13 @@ requirejs([
 
     // now find the hub
     //
-    $('body').html(rangesTemplate({ranges:['10.0.0.', '10.0.1.', '192.168.0.', '192.168.1.']}));
+    $('#main').html(rangesTemplate({ranges:['10.0.0.', '10.0.1.', '192.168.0.', '192.168.1.']}));
 
     $('input').on('click', function() {
 
         var range = $(this).val();
 
-        $('body').html('Looking for hub on ' + range + '*');
+        $('#main').html('Looking for hub on ' + range + '*');
 
         findAndConnect(range);
     });
@@ -308,7 +308,7 @@ requirejs([
         }
     });
 
-    $('body').append('loading music...');
+    $('#main').append('<div id="music">loading music...</div>');
 
     var songs = {
         haruNoUmi: {url: 'haru_no_umi.mp3'},
@@ -321,14 +321,25 @@ requirejs([
 
     for (var key in songs) {
         var song = songs[key];
-        var obj = new Audio(song.url);
+
+        $('body').append('<audio id="' + key + '" load="auto" src="' + song.url + '" />');
+        var obj = $('#' + key);
+
+        //var obj = new Audio(song.url);
         //obj.load();
+        //$(this).attr('src')
         obj.name = key;
 
 
         $(obj).bind('canplaythrough', function() {
-            $('body').append('complete');
+            $('#main').append('<div>complete</div>');
+        });
 
+        $(obj).bind('progress', function(e) {
+
+
+
+            $('#main').append('<div>progress:' + e.eventPhase + '</div>');
         });
 
         music[key] = obj;
@@ -351,7 +362,7 @@ requirejs([
             buttons: buttons
         };
 
-        $('body').html(rev12({}) + template(viewModel) + rev17({}));
+        $('#main').html(rev12({}) + template(viewModel) + rev17({}));
 
         // add sound buttons
         $('.btnAbyss').after('<div class="music" data-name="haruNoUmi">Haru No Umi</div>');
@@ -393,124 +404,11 @@ requirejs([
 
         });
 
-
     }
 
     function log(msg) {
-        $('body').append(msg + "<br>");
+        $('#main').append(msg + "<br>");
         //console.log(msg);
     }
 
-
-
 });
-
-
-
-
-
-
-/*
- $('.colorButton').on('click', setColor);
- $('#turnOff').on('click', turnOff);
- $('#chase').on('click', chase);
-
- function getSelectedLights() {
-
- var chks = $('.lightOption:checked');
-
- var a = [];
-
- // set each light to the specified color
- for (var i = 0; i < chks.length; i++) {
-
- // get the light
- var lightId = $(chks[i]).data('id');
- var light = hub.lights[lightId];
-
- a.push(light);
- }
-
- return a;
- }
-
- function setColor() {
-
- chasing = false; //make sure
-
- var lights = getSelectedLights();
-
- // make sure both light and color are selected
- if (lights.length == 0) return;
-
- var stateIndex = $(this).data('index');
- var state = rainbowStates[stateIndex];
-
- // set each light to the specified color
- for (var i = 0; i < lights.length; i++) {
-
- // get the light
- var light = lights[i];
-
- // create and set the state
- light.setState({state: state, transitionTime:300});
- }
- }
-
- function turnOff() {
- chasing = false; //make sure
-
- var lights = getSelectedLights();
- if (lights.length == 0) return;
- for (var i = 0; i < lights.length; i++) {
- var light = lights[i];
- var state = State.create(false, null, null);
- light.setState({state: state});
- }
- }
-
- var rainbow = [
- State.create(true, 245, Color.createByTriangle("red", 0.00, 1.0)),
- State.create(true, 255, Color.createByTriangle("orange", 0.05, 1.0)),
- State.create(true, 255, Color.createByTriangle("yellow", 0.12, 1.0)),
- State.create(true, 150, Color.createByTriangle("green", 0.2287, 1.0)),
- State.create(true, 255, Color.createByTriangle("blue", 0.56, 1.0)),
- State.create(true, 150, Color.createByTriangle("indigo", 0.60, 1.0)),
- State.create(true, 255, Color.createByTriangle("violet", 0.65, 1.0))
- ];
-
- var chasing = false;
-
- function chase() {
- var lights = getSelectedLights();
- if (lights.length == 0) return;
-
- var index = 0;
- var transition = +$('#transition').val();
- var transitionTime = transition * 0.9;
-
-
- chasing = true;
-
- function next() {
-
- // find stop condition
- if (!chasing) return;
-
- var state = rainbow[index];
-
- for (var i = 0; i < lights.length; i++) {
- var light = lights[i];
-
- light.setState({state: state, transitionTime:transitionTime});
- }
-
- // setup for next round
- index = index < (rainbow.length-1) ? index + 1 : 0;
-
- setTimeout(next, transition);
- }
-
- next();
- }
- */
