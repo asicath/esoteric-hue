@@ -313,7 +313,7 @@ requirejs([
         }
     });
 
-    $('#main').append('<div id="music">loading music...</div>');
+    $('#main').append('<div id="music">loading music...<div id="forceLoad" class="button">Force Load (for iPad)</div></div>');
 
     var songs = {
         haruNoUmi: {url: 'haru_no_umi.mp3'},
@@ -322,36 +322,52 @@ requirejs([
 
 
 
+    function forceLoad() {
+        for (var key in music) {
+            if (!music[key].isComplete) {
+                music[key].load();
+            }
+        }
+    }
+
+    $('#forceLoad').on('click', function() {
+        forceLoad();
+    });
+
+
     var music = {};
-    music.loading = 0;
-    music.loaded = 0;
 
     for (var key in songs) {
         var song = songs[key];
 
-        $('body').append('<audio id="' + key + '" load="auto" src="' + song.url + '" />');
-        var obj = $('#' + key);
+        //$('body').append('<audio data-name="' + key + '" load="auto" src="' + song.url + '" type="audio/mpeg" />');
+        //var obj = $('audio[data-name="' + key + '"]')[0];
 
-        //var obj = new Audio(song.url);
+        $('#main').append('<div id="' + key + '">loading ' + song.url + '<br></div>');
 
-        //$(this).attr('src')
-        obj.name = key;
-
-        music.loading++;
-
-
-        $(obj).bind('canplaythrough', function() {
-            $('#main').append('<div>complete</div>');
-        });
-
-        $(obj).bind('progress', function(e) {
-
-
-
-            $('#main').append('<div>progress:' + e.eventPhase + '</div>');
-        });
+        var obj = new Audio(song.url);
+        obj.isComplete = false;
 
         music[key] = obj;
+
+        obj.name = key;
+
+        $(obj).bind('progress', function(e) {
+            var key = this.name;
+            $('#' + key).append('.');
+        });
+
+        $(obj).bind('canplaythrough', function() {
+            var key = this.name;
+            $('#' + key).append('complete');
+            this.isComplete = true;
+        });
+
+
+
+        //obj.load();
+
+        //obj.volume = 0;
     }
 
 
