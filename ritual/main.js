@@ -42,12 +42,12 @@ requirejs([
 
     var rainbowStates = {
         red: State.create(true, 245, Color.createByTriangle("red", 0.00, 1.0)),
-        orange: State.create(true, 255, Color.createByTriangle("orange", 0.05, 1.0)),
-        yellow: State.create(true, 255, Color.createByTriangle("yellow", 0.12, 1.0)),
+        orange: State.create(true, 254, Color.createByTriangle("orange", 0.05, 1.0)),
+        yellow: State.create(true, 254, Color.createByTriangle("yellow", 0.12, 1.0)),
         green: State.create(true, 150, Color.createByTriangle("green", 0.2287, 1.0)),
-        blue: State.create(true, 255, Color.createByTriangle("blue", 0.56, 1.0)),
+        blue: State.create(true, 254, Color.createByTriangle("blue", 0.56, 1.0)),
         indigo: State.create(true, 150, Color.createByTriangle("indigo", 0.60, 1.0)),
-        violet: State.create(true, 255, Color.createByTriangle("violet", 0.65, 1.0))
+        violet: State.create(true, 254, Color.createByTriangle("violet", 0.65, 1.0))
     };
 
     // now find the hub
@@ -63,7 +63,7 @@ requirejs([
             return;
         }
 
-        $('body').html('Looking for hub on ' + range + '*');
+        $('#main').html('Looking for hub on ' + range + '*');
 
         findAndConnect(range);
     });
@@ -154,7 +154,7 @@ requirejs([
     buttons.push({
         text: "Full Light",
         execute: function() {
-            var state = State.create(true, 255, Color.createByCT("norm", 370));
+            var state = State.create(true, 254, Color.createByCT("norm", 370));
             setState(state);
         }
     });
@@ -173,7 +173,7 @@ requirejs([
             var off = State.create(false, null, null);
             setState(off, allExceptFilter(altar));
 
-            var bright = State.create(true, 255, Color.createByCT("white", 153));
+            var bright = State.create(true, 254, Color.createByCT("white", 153));
             setState(bright, onlyFilter(altar));
         }
     });
@@ -278,12 +278,12 @@ requirejs([
 
     var rainbowArray = [
         State.create(true, 245, Color.createByTriangle("red", 0.00, 1.0)),
-        State.create(true, 255, Color.createByTriangle("orange", 0.05, 1.0)),
-        State.create(true, 255, Color.createByTriangle("yellow", 0.12, 1.0)),
+        State.create(true, 254, Color.createByTriangle("orange", 0.05, 1.0)),
+        State.create(true, 254, Color.createByTriangle("yellow", 0.12, 1.0)),
         State.create(true, 150, Color.createByTriangle("green", 0.2287, 1.0)),
-        State.create(true, 255, Color.createByTriangle("blue", 0.56, 1.0)),
+        State.create(true, 254, Color.createByTriangle("blue", 0.56, 1.0)),
         State.create(true, 150, Color.createByTriangle("indigo", 0.60, 1.0)),
-        State.create(true, 255, Color.createByTriangle("violet", 0.65, 1.0))
+        State.create(true, 254, Color.createByTriangle("violet", 0.65, 1.0))
     ];
 
     buttons.push({
@@ -363,11 +363,6 @@ requirejs([
             this.isComplete = true;
         });
 
-
-
-        //obj.load();
-
-        //obj.volume = 0;
     }
 
 

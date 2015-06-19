@@ -8,6 +8,7 @@ define(function() {
         light.id = id;
         light.name = info.name;
         light.state = info.state;
+        light.modelid = info.modelid; // LCT001 Extended color light //LWB004 Dimmable light
 
         light.setState = function(o) {
 
@@ -80,18 +81,70 @@ define(function() {
             var transitionTime = o.transitionTime || 0; // default to 0
             data.transitiontime = transitionTime / 100; // called out in 100ms periods
 
+            setStateAndVerify({
+                data: data,
+                nextState: nextState,
+                success: o.success,
+                fail: o.fail
+            }, 2);
+
+        };
+
+        function setStateAndVerify(o, attempts) {
+
+            if (!attempts) {
+                console.log('Too many attempts');
+
+                if (o.fail) o.fail();
+                return;
+            }
+
             // now make the call
             hub.setLightState({
                 id: id,
-                data: data,
+                data: o.data,
                 success: function() {
-                    light.state = nextState;
-                    if (o.success) o.success();
+
+                    // now verify state
+                    hub.getLightState({id:id, success: function(e) {
+
+                        for (var key in o.data) {
+
+                            // ignore transition time
+                            if (key == 'transitiontime') continue;
+
+                            // light does not support that attribute
+                            if (typeof e.state[key] === 'undefined') continue;
+
+                            if (key == 'xy') {
+                                if (
+                                    Math.floor(e.state.xy[0] * 1000) == Math.floor(o.data.xy[0] * 1000) &&
+                                    Math.floor(e.state.xy[1] * 1000) == Math.floor(o.data.xy[1] * 1000)
+                                ) continue;
+                            }
+                            else if (e.state[key] == o.data[key]) continue;
+
+                            // fail
+                            console.log('setState did not take, retrying...');
+                            console.log(o.data);
+                            console.log(e.state);
+
+
+                            setTimeout(function() {
+                                setStateAndVerify(o, attempts - 1);
+                            }, 500);
+
+                        }
+
+                        // its all good, save the state and move on
+                        light.state = o.nextState;
+                        if (o.success) o.success();
+                    }});
+
                 },
                 fail: o.fail
             });
-
-        };
+        }
 
         return light;
     };

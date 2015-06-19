@@ -250,6 +250,15 @@ define(['hue/http-hue', 'hue/light'], function(http, Light) {
             });
         };
 
+        hub.getLightState = function(o) {
+            http.get({
+                host: ip,
+                path: '/api/' + username + '/lights/' + o.id,
+                success: o.success,
+                fail: o.fail
+            });
+        };
+
     };
 
     return exports;
