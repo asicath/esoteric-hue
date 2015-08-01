@@ -7,7 +7,7 @@ requirejs.config({
     //never includes a ".js" extension since
     //the paths config could be for a directory.
     paths: {
-        'jquery': 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min',
+        'jquery': 'jquery.min',
         'http-active': 'hue/http-web'
     }
 });
@@ -161,10 +161,10 @@ requirejs([
         text: "First",
         execute: function() {
             var off = State.create(false, null, null);
-            setState(off, allExceptFilter(east));
+            setState(off, allExceptFilter(mainColored));
 
-            var state = State.create(true, 100, Color.createByTriangle("blue", 0.56, 1.0));
-            setState(state, onlyFilter(east));
+            var state = State.create(true, 10, Color.createByTriangle("blue", 0.56, 1.0));
+            setState(state, onlyFilter(mainColored));
         }
     });
 
@@ -198,10 +198,10 @@ requirejs([
         text: "A little before Dawn",
         execute: function() {
             var off = State.create(false, null, null);
-            setState(off, allExceptFilter(center));
+            setState(off, allExceptFilter(west));
 
             var state = State.create(true, 50, Color.createByCT("norm", 370));
-            setState(state, onlyFilter(center));
+            setState(state, onlyFilter(west));
         }
     });
 
@@ -210,6 +210,17 @@ requirejs([
         execute: function() {
             var state = State.create(true, 253, Color.createByCT("norm", 370));
             setState(state);
+        }
+    });
+
+    buttons.push({
+        text: "Instruction",
+        execute: function() {
+            var off = State.create(false, null, null);
+            setState(off, allExceptFilter(mainColored));
+
+            var state = State.create(true, 200, Color.createByCT("norm", 370));
+            setState(state, onlyFilter(mainColored));
         }
     });
 
