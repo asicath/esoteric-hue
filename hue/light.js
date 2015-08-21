@@ -18,17 +18,18 @@ define(function() {
             // crop data down to just changes for better performance
             var data = {};
             var nextState = {};
-            var hasChange = false;
+            var onChange = false;
 
             if (typeof raw.on !== "undefined" && raw.on != light.state.on) {
                 data.on = raw.on;
                 nextState.on = raw.on;
+                onChange = true;
             }
             else {
                 nextState.on = light.state.on;
             }
 
-            if (typeof raw.bri !== "undefined" && raw.bri != light.state.bri) {
+            if (onChange || typeof raw.bri !== "undefined" && raw.bri != light.state.bri) {
                 data.bri = raw.bri;
                 nextState.bri = raw.bri;
             }
@@ -38,7 +39,7 @@ define(function() {
 
             if (typeof raw.xy !== "undefined") {
                 nextState.colormode = "xy";
-                if (light.state.colormode != "xy" || light.state.xy[0] != raw.xy[0] || light.state.xy[1] != raw.xy[1]) {
+                if (onChange || light.state.colormode != "xy" || light.state.xy[0] != raw.xy[0] || light.state.xy[1] != raw.xy[1]) {
                     data.xy = raw.xy;
                     nextState.xy = raw.xy;
                 }
@@ -48,7 +49,7 @@ define(function() {
             }
             else if (typeof raw.ct !== "undefined") {
                 nextState.colormode = "ct";
-                if (light.state.colormode != "ct" || light.state.ct != raw.ct) {
+                if (onChange || light.state.colormode != "ct" || light.state.ct != raw.ct) {
                     data.ct = raw.ct;
                     nextState.ct = raw.ct;
                 }
@@ -58,7 +59,7 @@ define(function() {
             }
             else if (typeof raw.hue !== "undefined") {
                 nextState.colormode = "hs";
-                if (light.state.colormode != "hs" || light.state.hue != raw.hue || light.state.sat != raw.sat) {
+                if (onChange || light.state.colormode != "hs" || light.state.hue != raw.hue || light.state.sat != raw.sat) {
                     data.hue = raw.hue;
                     data.sat = raw.sat;
                     nextState.hue = raw.hue;
