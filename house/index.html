@@ -1,0 +1,73 @@
+<html>
+<head>
+    <script type="text/javascript" src="../jquery.min.js"></script>
+    <script type="text/javascript" src="../lodash.min.js"></script>
+    <script type="text/javascript" src="../require.js" data-main="main"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background-color: black;
+            color:#fff;
+            font-size: 22px;
+            font-family: verdana, arial, sans-serif;
+            margin-top:2em;
+
+        }
+        .button, .music {
+            cursor: pointer;
+            padding: 0.5em;
+            border: 0.15em solid white;
+            margin-bottom: 1em;
+
+            width:50%;
+            margin-left:auto;
+            margin-right:auto;
+
+            background-color: #111;
+
+            font-size: 1.2em;
+        }
+        .music {
+            text-align: right;
+        }
+
+        .active {
+            background-color: #888;
+        }
+        .transition {
+            background-color: #444;
+        }
+
+        .text {
+            font-size: 1em;
+            margin-bottom: 2em;
+        }
+        .chapter {
+            margin-bottom: 0.5em;
+        }
+        .verse {
+            margin-bottom: 0.5em;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="main">Loading...</div>
+
+    <script id="main-template" type="text/x-handlebars-template">
+        {{#each buttons}}
+        <div class="button {{class}}" data-index="{{index}}">{{text}}</div>
+        {{/each}}
+    </script>
+
+    <script id="ranges-template" type="text/x-handlebars-template">
+        {{#each ranges}}
+        <input type="button" value="{{this}}"><br><br>
+        {{/each}}
+
+        <input type="button" value="SKIP"><br><br>
+        <div>Horizon Temple is 192.168.1.*</div><br>
+    </script>
+
+</body>
+</html>
