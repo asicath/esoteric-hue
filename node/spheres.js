@@ -24,7 +24,7 @@ var colors = [
         {name: 'citrine',    hue: 10000, sat: 255, bri: 150},
         {name: 'olive',     hue: 25500, sat: 255, bri: 70},
         {name: 'Black',     on: false, ct:153, bri: 0},
-        {name: 'orange',    hue: 3000,  sat: 255, bri: 150}
+        {name: 'russet',    hue: 3000,  sat: 255, bri: 150}
     ]}
 ];
 
