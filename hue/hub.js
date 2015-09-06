@@ -1,4 +1,4 @@
-define(['hue/http-hue', 'hue/light'], function(http, Light) {
+define(['hue/http-hue', 'hue/light', 'lodash'], function(http, Light, _) {
 
     var exports = {};
 
@@ -259,6 +259,26 @@ define(['hue/http-hue', 'hue/light'], function(http, Light) {
             });
         };
 
+        hub.setState = function(state, filter, transitionTime) {
+
+            // if no filter, just set them all
+            if (!filter) filter = function(light) {return true;};
+
+            var lights = [];
+
+            for (var id in hub.lights) {
+                lights.push(hub.lights[id]);
+            }
+
+            lights = _.filter(lights, filter);
+
+            if (typeof transitionTime === 'undefined') transitionTime = 1000;
+
+            for (var i = 0; i < lights.length; i++) {
+                lights[i].setState({state: state, transitionTime:transitionTime});
+            }
+        };
+
     };
 
     exports.findAndConnect = function(range, log, onConnect) {
@@ -287,6 +307,7 @@ define(['hue/http-hue', 'hue/light'], function(http, Light) {
         );
 
     };
+
 
     return exports;
 });

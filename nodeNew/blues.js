@@ -17,16 +17,35 @@ requirejs.config({
 requirejs([
     'hue/hub',
     'hue/color',
-    'hue/state'
+    'hue/state',
+    'lodash'
 ], function(
     Hub,
     Color,
-    State
+    State,
+    _
 ) {
 
-    Hub.findAndConnect('10.0.0.', console.log, function() {
+    var temple = ["Temple 1", "Temple 2"];
+    var office = ["Office W","Office E"];
+    var livingRoom = ["Living Room W","Living Room E"];
+    var all = temple.concat(office).concat(livingRoom);
+    var allExcept = function(names) { return function(light) { return !_.contains(names, light.name); }; };
+    var only = function(names) { return function(light) { return _.contains(names, light.name); }; };
+
+    var hub;
+
+    Hub.findAndConnect('10.0.0.', console.log, function(h) {
+        hub = h;
+
         console.log('connected');
+
+        var state = State.create(true, 200, Color.createByTriangle("blue", 0.56, 1.0));
+        hub.setState(state, only(office), 5000);
+
     });
+
+
 
 });
 

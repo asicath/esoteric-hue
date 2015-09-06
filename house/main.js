@@ -8,7 +8,8 @@ requirejs.config({
     //the paths config could be for a directory.
     paths: {
         'jquery': 'jquery.min',
-        'http-active': 'hue/http-web'
+        'http-active': 'hue/http-web',
+        'lodash': 'lodash.min'
     }
 });
 
@@ -16,12 +17,14 @@ requirejs([
     'hue/hub',
     'hue/color',
     'hue/state',
-    'handlebars'
+    'handlebars',
+    'lodash'
 ], function(
     Hub,
     Color,
     State,
-    Handlebars
+    Handlebars,
+    _
 ) {
 
     var ip, hub;
