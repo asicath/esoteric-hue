@@ -40,36 +40,31 @@ requirejs([
 
         console.log('connected');
 
-        var state = State.create(true, 200, Color.createByTriangle(0.56, 1.0));
-        hub.setState(state, only(office), 5000);
+        //var state = State.create(true, 200, Color.createByTriangle(0.56, 1.0));
+        //hub.setState(state, only(office), 5000, function() {
+        //    console.log('!');
+        //});
+
+        swap(only(office));
 
     });
 
+    var swap = function(filter) {
 
-    var swap = function(index, first) {
-
-        var transitionTime = Math.floor(Math.random() * 1000) + 10000;// 1000;
+        var transitionTime = Math.floor(Math.random() * 1000) + 10000;
         var holdTime = 500;
+        var brightness = Math.floor(Math.random() * 200) + 55;
+        var hueValue = Math.floor(Math.random() * 3000) + 45500;
 
-
-        var state = {
-            hue: Math.floor(Math.random() * 3000) + 45500,
-            sat: 255,
-            bri: Math.floor(Math.random() * 200) + 55,
-            transitiontime:Math.floor(transitionTime / 100)
-        };
-
-        if (first) {
-            state.on = true;
-        }
-
-        console.log(state);
-
-        hue.setLightState(index, state, function() {
+        var state = State.create(true, brightness, Color.createByHS(hueValue, 255));
+        //var state = State.create(true, 200, Color.createByTriangle(0.56, 1.0));
+        hub.setState(state, only(office), transitionTime, function() {
+            console.log('set');
             setTimeout(function() {
-                swap(index, false);
+                swap(filter);
             }, holdTime + transitionTime);
         });
+
 
     };
 

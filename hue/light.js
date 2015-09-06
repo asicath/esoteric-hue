@@ -80,7 +80,7 @@ define(function() {
 
             // add in the transitionTime
             var transitionTime = o.transitionTime || 0; // default to 0
-            data.transitiontime = transitionTime / 100; // called out in 100ms periods
+            data.transitiontime = Math.floor(transitionTime / 100); // called out in 100ms periods
 
             setStateAndVerify({
                 data: data,

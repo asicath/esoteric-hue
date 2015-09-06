@@ -259,7 +259,7 @@ define(['hue/http-hue', 'hue/light', 'lodash'], function(http, Light, _) {
             });
         };
 
-        hub.setState = function(state, filter, transitionTime) {
+        hub.setState = function(state, filter, transitionTime, after) {
 
             // if no filter, just set them all
             if (!filter) filter = function(light) {return true;};
@@ -274,8 +274,16 @@ define(['hue/http-hue', 'hue/light', 'lodash'], function(http, Light, _) {
 
             if (typeof transitionTime === 'undefined') transitionTime = 1000;
 
+            var completed = 0;
+            var waitForAllToComplete = function() {
+                completed++;
+                if (completed == lights.length) {
+                    if (after) after();
+                }
+            };
+
             for (var i = 0; i < lights.length; i++) {
-                lights[i].setState({state: state, transitionTime:transitionTime});
+                lights[i].setState({state: state, transitionTime:transitionTime, success:waitForAllToComplete });
             }
         };
 
