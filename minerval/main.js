@@ -31,13 +31,13 @@ requirejs([
     var rangesTemplate = Handlebars.compile($("#ranges-template").html());
 
     var rainbowStates = {
-        red: State.create(true, 245, Color.createByTriangle("red", 0.00, 1.0)),
-        orange: State.create(true, 254, Color.createByTriangle("orange", 0.05, 1.0)),
-        yellow: State.create(true, 254, Color.createByTriangle("yellow", 0.12, 1.0)),
-        green: State.create(true, 150, Color.createByTriangle("green", 0.2287, 1.0)),
-        blue: State.create(true, 254, Color.createByTriangle("blue", 0.56, 1.0)),
-        indigo: State.create(true, 150, Color.createByTriangle("indigo", 0.60, 1.0)),
-        violet: State.create(true, 254, Color.createByTriangle("violet", 0.65, 1.0))
+        red: State.create(true, 245, Color.createByTriangle(0.00, 1.0)),
+        orange: State.create(true, 254, Color.createByTriangle(0.05, 1.0)),
+        yellow: State.create(true, 254, Color.createByTriangle(0.12, 1.0)),
+        green: State.create(true, 150, Color.createByTriangle(0.2287, 1.0)),
+        blue: State.create(true, 254, Color.createByTriangle(0.56, 1.0)),
+        indigo: State.create(true, 150, Color.createByTriangle(0.60, 1.0)),
+        violet: State.create(true, 254, Color.createByTriangle(0.65, 1.0))
     };
 
     // now find the hub
@@ -145,7 +145,7 @@ requirejs([
     buttons.push({
         text: "Full Light",
         execute: function() {
-            var state = State.create(true, 255, Color.createByCT("norm", 370));
+            var state = State.create(true, 255, Color.createByCT(370));
             setState(state);
         }
     });
@@ -153,7 +153,7 @@ requirejs([
     buttons.push({
         text: "Medium Light",
         execute: function() {
-            var state = State.create(true, 150, Color.createByCT("norm", 370));
+            var state = State.create(true, 150, Color.createByCT(370));
             setState(state);
         }
     });
@@ -161,7 +161,7 @@ requirejs([
     buttons.push({
         text: "Low Light",
         execute: function() {
-            var state = State.create(true, 64, Color.createByCT("norm", 370));
+            var state = State.create(true, 64, Color.createByCT(370));
             setState(state);
         }
     });
@@ -173,9 +173,9 @@ requirejs([
         }
     });
 
-    var citrine = State.create(true, 150, Color.createByHS('Citrine', 10000, 255));
-    var olive = State.create(true, 70, Color.createByHS('Olive', 25500, 255));
-    var russet = State.create(true, 150, Color.createByHS('Russet', 3000, 255));
+    var citrine = State.create(true, 150, Color.createByHS(10000, 255));
+    var olive = State.create(true, 70, Color.createByHS(25500, 255));
+    var russet = State.create(true, 150, Color.createByHS(3000, 255));
     buttons.push({
         text: "Malkuth",
         execute: function() {
@@ -186,7 +186,7 @@ requirejs([
         }
     });
 
-    var indigo = State.create(true, 120, Color.createByTriangle("indigo", 0.60, 1.0));
+    var indigo = State.create(true, 120, Color.createByTriangle(0.60, 1.0));
     buttons.push({
         text: "Indigo",
         execute: function() {
@@ -195,7 +195,7 @@ requirejs([
         }
     });
 
-    var green = State.create(true, 100, Color.createByTriangle("green", 0.2287, 1.0));
+    var green = State.create(true, 100, Color.createByTriangle(0.2287, 1.0));
     buttons.push({
         text: "Green",
         execute: function() {

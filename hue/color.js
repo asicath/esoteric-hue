@@ -10,10 +10,9 @@ define(function() {
 
     var colorId = 0;
 
-    exports.createByXY = function(name, x, y) {
+    exports.createByXY = function(x, y) {
         var color = {};
 
-        color.name = name;
         color.colormode = "xy";
         color.id = ++colorId;
 
@@ -29,10 +28,9 @@ define(function() {
         return color;
     };
 
-    exports.createByCT = function(name, ct) {
+    exports.createByCT = function(ct) {
         var color = {};
 
-        color.name = name;
         color.colormode = "ct";
         color.id = ++colorId;
 
@@ -45,10 +43,9 @@ define(function() {
         return color;
     };
 
-    exports.createByHS = function(name, hue, saturation) {
+    exports.createByHS = function(hue, saturation) {
         var color = {};
 
-        color.name = name;
         color.colormode = "hs";
         color.id = ++colorId;
 
@@ -77,13 +74,13 @@ define(function() {
     };
 
     // create a color for the three RGB extremities
-    exports.RED = exports.createByXY('red', points.r.x, points.r.y);
-    exports.GREEN = exports.createByXY('green', points.g.x, points.g.y);
-    exports.BLUE = exports.createByXY('blue', points.b.x, points.b.y);
+    exports.RED = exports.createByXY(points.r.x, points.r.y);
+    exports.GREEN = exports.createByXY(points.g.x, points.g.y);
+    exports.BLUE = exports.createByXY(points.b.x, points.b.y);
     exports.CENTER_POINT = {x: 0.31569, y: 0.32960};
 
     // similar to Hue/Saturation, but more precise?
-    exports.createByTriangle = function(name, percent, saturation) {
+    exports.createByTriangle = function(percent, saturation) {
 
         percent = percent % 1.0;
 
@@ -139,7 +136,7 @@ define(function() {
         if (typeof saturation !== 'undefined') p = desaturate(p, saturation);
 
         // finally return an xy
-        return exports.createByXY(name, p.x, p.y);
+        return exports.createByXY(p.x, p.y);
     };
 
     function desaturate(p, saturation) {

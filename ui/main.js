@@ -226,7 +226,7 @@ requirejs([
             var d = Math.sqrt(Math.pow(p.x - center.x, 2) + Math.pow(p.y - center.y, 2));
             var sat = Math.min(1, d / radius);
 
-            var color = Color.createByTriangle('', colorPercent, sat);
+            var color = Color.createByTriangle(colorPercent, sat);
 
 
 

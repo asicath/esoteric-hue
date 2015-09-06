@@ -38,13 +38,13 @@ requirejs([
     //colors[Color.BLUE.id] = Color.BLUE;
 
     var rainbowStates = [
-        State.create(true, 245, Color.createByTriangle("red", 0.00, 1.0)),
-        State.create(true, 255, Color.createByTriangle("orange", 0.05, 1.0)),
-        State.create(true, 255, Color.createByTriangle("yellow", 0.12, 1.0)),
-        State.create(true, 150, Color.createByTriangle("green", 0.2287, 1.0)),
-        State.create(true, 255, Color.createByTriangle("blue", 0.56, 1.0)),
-        State.create(true, 150, Color.createByTriangle("indigo", 0.60, 1.0)),
-        State.create(true, 255, Color.createByTriangle("violet", 0.65, 1.0))
+        State.create(true, 245, Color.createByTriangle(0.00, 1.0)),
+        State.create(true, 255, Color.createByTriangle(0.05, 1.0)),
+        State.create(true, 255, Color.createByTriangle(0.12, 1.0)),
+        State.create(true, 150, Color.createByTriangle(0.2287, 1.0)),
+        State.create(true, 255, Color.createByTriangle(0.56, 1.0)),
+        State.create(true, 150, Color.createByTriangle(0.60, 1.0)),
+        State.create(true, 255, Color.createByTriangle(0.65, 1.0))
     ];
 
     for (var j = 0; j < rainbowStates.length; j++) {
@@ -168,13 +168,13 @@ requirejs([
         }
 
         var rainbow = [
-            State.create(true, 245, Color.createByTriangle("red", 0.00, 1.0)),
-            State.create(true, 255, Color.createByTriangle("orange", 0.05, 1.0)),
-            State.create(true, 255, Color.createByTriangle("yellow", 0.12, 1.0)),
-            State.create(true, 150, Color.createByTriangle("green", 0.2287, 1.0)),
-            State.create(true, 255, Color.createByTriangle("blue", 0.56, 1.0)),
-            State.create(true, 150, Color.createByTriangle("indigo", 0.60, 1.0)),
-            State.create(true, 255, Color.createByTriangle("violet", 0.65, 1.0))
+            State.create(true, 245, Color.createByTriangle(0.00, 1.0)),
+            State.create(true, 255, Color.createByTriangle(0.05, 1.0)),
+            State.create(true, 255, Color.createByTriangle(0.12, 1.0)),
+            State.create(true, 150, Color.createByTriangle(0.2287, 1.0)),
+            State.create(true, 255, Color.createByTriangle(0.56, 1.0)),
+            State.create(true, 150, Color.createByTriangle(0.60, 1.0)),
+            State.create(true, 255, Color.createByTriangle(0.65, 1.0))
         ];
 
         var chasing = false;

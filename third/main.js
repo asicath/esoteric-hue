@@ -31,13 +31,13 @@ requirejs([
     var rangesTemplate = Handlebars.compile($("#ranges-template").html());
 
     var rainbowStates = {
-        red: State.create(true, 245, Color.createByTriangle("red", 0.00, 1.0)),
-        orange: State.create(true, 254, Color.createByTriangle("orange", 0.05, 1.0)),
-        yellow: State.create(true, 254, Color.createByTriangle("yellow", 0.12, 1.0)),
-        green: State.create(true, 150, Color.createByTriangle("green", 0.2287, 1.0)),
-        blue: State.create(true, 254, Color.createByTriangle("blue", 0.56, 1.0)),
-        indigo: State.create(true, 150, Color.createByTriangle("indigo", 0.60, 1.0)),
-        violet: State.create(true, 254, Color.createByTriangle("violet", 0.65, 1.0))
+        red: State.create(true, 245, Color.createByTriangle(0.00, 1.0)),
+        orange: State.create(true, 254, Color.createByTriangle(0.05, 1.0)),
+        yellow: State.create(true, 254, Color.createByTriangle(0.12, 1.0)),
+        green: State.create(true, 150, Color.createByTriangle(0.2287, 1.0)),
+        blue: State.create(true, 254, Color.createByTriangle(0.56, 1.0)),
+        indigo: State.create(true, 150, Color.createByTriangle(0.60, 1.0)),
+        violet: State.create(true, 254, Color.createByTriangle(0.65, 1.0))
     };
 
     // now find the hub
@@ -144,7 +144,7 @@ requirejs([
     buttons.push({
         text: "Low Light Seating",
         execute: function() {
-            var state = State.create(true, 64, Color.createByCT("norm", 370));
+            var state = State.create(true, 64, Color.createByCT(370));
             setState(state);
         }
     });
@@ -163,7 +163,7 @@ requirejs([
             var off = State.create(false, null, null);
             setState(off, allExceptFilter(mainColored));
 
-            var state = State.create(true, 10, Color.createByTriangle("blue", 0.56, 1.0));
+            var state = State.create(true, 10, Color.createByTriangle(0.56, 1.0));
             setState(state, onlyFilter(mainColored));
         }
     });
@@ -174,7 +174,7 @@ requirejs([
             var off = State.create(false, null, null);
             setState(off, allExceptFilter(mainColored));
 
-            var state = State.create(true, 254, Color.createByTriangle("yellow", 0.12, 1.0));
+            var state = State.create(true, 254, Color.createByTriangle(0.12, 1.0));
             setState(state, onlyFilter(mainColored));
         }
     });
@@ -186,8 +186,8 @@ requirejs([
             //setState(off, allExceptFilter(mainColored));
             setState(off, onlyFilter(east), 5000);
 
-            var red = State.create(true, 245, Color.createByTriangle("red", 0.00, 1.0));
-            var orange = State.create(true, 128, Color.createByTriangle("orange", 0.05, 1.0));
+            var red = State.create(true, 245, Color.createByTriangle(0.00, 1.0));
+            var orange = State.create(true, 128, Color.createByTriangle(0.05, 1.0));
 
             setState(red, onlyFilter(center), 5000);
             setState(orange, onlyFilter(west), 5000);
@@ -200,7 +200,7 @@ requirejs([
             var off = State.create(false, null, null);
             setState(off, allExceptFilter(west));
 
-            var state = State.create(true, 50, Color.createByCT("norm", 370));
+            var state = State.create(true, 50, Color.createByCT(370));
             setState(state, onlyFilter(west));
         }
     });
@@ -208,7 +208,7 @@ requirejs([
     buttons.push({
         text: "Our Brother Stands Rejoicing!",
         execute: function() {
-            var state = State.create(true, 253, Color.createByCT("norm", 370));
+            var state = State.create(true, 253, Color.createByCT(370));
             setState(state);
         }
     });
@@ -219,7 +219,7 @@ requirejs([
             var off = State.create(false, null, null);
             setState(off, allExceptFilter(mainColored));
 
-            var state = State.create(true, 200, Color.createByCT("norm", 370));
+            var state = State.create(true, 200, Color.createByCT(370));
             setState(state, onlyFilter(mainColored));
         }
     });

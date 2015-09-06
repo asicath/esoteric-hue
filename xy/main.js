@@ -93,7 +93,7 @@ requirejs([
             // get the color
             var x = +$('#x').val();
             var y = +$('#y').val();
-            var color = Color.createByXY('xy', x, y);
+            var color = Color.createByXY(x, y);
 
             // get the brightness
             var bri = +$('#bri').val();
