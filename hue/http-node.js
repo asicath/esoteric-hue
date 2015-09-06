@@ -2,37 +2,97 @@ define(['http'], function(http) {
 
     var exports = {};
 
-    exports.put = function(host, path, data, done, fail) {
+    exports.put = function(a) {
         var options = {
-            host: host,
-            path: path,
+            host: a.host,
+            path: a.path,
             method: 'PUT'
         };
 
-        var callback = function(response) {
+        var req = http.request(options, function(response) {
             var str = '';
             response.on('data', function (chunk) { str += chunk; });
             response.on('end', function () {
-                var data = null;
                 try {
-                    data = JSON.parse(str);
-                    done(data);
+                    a.success(JSON.parse(str));
                 }
                 catch (e) {
-                    console.log(e);
-                    fail(e);
+                    a.fail(e);
                 }
             });
-        };
-
-        var req = http.request(options, callback);
-        req.write(JSON.stringify(data));
-        req.on('error', function (e) {
-            console.log(e);
-            fail(e);
         });
+
+        // write data to be put
+        req.write(JSON.stringify(a.data));
+
+        req.on('error', function (e) {
+            a.fail(e);
+        });
+
         req.end();
     };
+
+
+    exports.post = function(a) {
+
+        var options = {
+            host: a.host,
+            path: a.path,
+            method: 'POST'
+        };
+
+        // start the request
+        var request = http.request(options, function (res) {
+            var data = '';
+            res.on('data', function (chunk) {data += chunk;});
+            res.on('end', function () {
+                try {
+                    a.success(JSON.parse(data));
+                }
+                catch (e) {
+                    a.fail(e);
+                }
+            });
+        });
+
+        // write post data
+        request.write(JSON.stringify(a.data));
+
+        request.on('error', function (e) {
+            a.fail(e);
+        });
+
+        request.end();
+    };
+
+
+
+    exports.get = function(a) {
+        var options = {
+            host: a.host,
+            path: a.path
+        };
+
+        var request = http.request(options, function (res) {
+            var data = '';
+            res.on('data', function (chunk) { data += chunk; });
+            res.on('end', function () {
+                try {
+                    a.success(JSON.parse(data));
+                }
+                catch (e) {
+                    a.fail(e);
+                }
+            });
+        });
+
+        request.on('error', function (e) {
+            a.fail(e);
+        });
+
+        request.end();
+    };
+
 
     return exports;
 });

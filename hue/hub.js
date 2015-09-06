@@ -261,5 +261,32 @@ define(['hue/http-hue', 'hue/light'], function(http, Light) {
 
     };
 
+    exports.findAndConnect = function(range, log, onConnect) {
+        log('searching for hub...');
+
+        exports.find(
+            range,
+            function (foundIp) {
+                log('hub found: ' + foundIp + ", connecting...");
+                var ip = foundIp;
+
+                exports.create(
+                    ip,
+                    onConnect,
+                    function(e) {
+                        log(JSON.stringify(e));
+                    },
+                    function() {
+                        log('press link button');
+                    }
+                );
+            },
+            function (e) {
+                log(e);
+            }
+        );
+
+    };
+
     return exports;
 });
