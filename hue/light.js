@@ -106,6 +106,7 @@ define(function() {
                 data: o.data,
                 success: function() {
 
+                    /*
                     // now verify state
                     hub.getLightState({id:id, success: function(e) {
 
@@ -137,10 +138,13 @@ define(function() {
 
                         }
 
-                        // its all good, save the state and move on
-                        light.state = o.nextState;
-                        if (o.success) o.success();
+
                     }});
+                    */
+
+                    // its all good, save the state and move on
+                    light.state = o.nextState;
+                    if (o.success) o.success();
 
                 },
                 fail: o.fail
