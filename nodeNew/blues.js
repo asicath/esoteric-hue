@@ -44,7 +44,7 @@ requirejs([
         swap(only(office));
         swap(only(livingRoom));
 
-        swap(only(temple));
+        //swap(only(temple));
     });
 
     var swap = function(filter) {
