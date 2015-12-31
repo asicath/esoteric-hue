@@ -1,3 +1,5 @@
+
+
 define(['hue/http-hue', 'hue/light', 'lodash'], function(http, Light, _) {
 
     var exports = {};
@@ -62,7 +64,7 @@ define(['hue/http-hue', 'hue/light', 'lodash'], function(http, Light, _) {
 
     // do a simple create user call to see if the ip is a hue hub
     // used to support find hub
-    var checkIp = function(ip, success, fail) {
+    var checkIp = function(ip) {
 
         return http.post({
             host: ip,
@@ -70,22 +72,17 @@ define(['hue/http-hue', 'hue/light', 'lodash'], function(http, Light, _) {
             data: {
                 devicetype: devicetype,
                 username: username
-            },
-            success: function(data) {
-                success(ip);
-            },
-            fail: function(e) {
-                // check the msg
-                if (e.length && e[0].error) {
-                    if (e[0].error.type == 101) {
-                        success(ip); // user not created
-                    }
-                    else {
-                        fail(ip);
-                    }
-                }
-                fail(ip);
             }
+        }).catch(function(e) {
+
+            // check the msg
+            if (e.length && e[0].error) {
+                if (e[0].error.type == 101) {
+                    return Promise.resolve(ip); // user not created
+                }
+            }
+            fail(ip);
+
         });
 
     };
@@ -316,7 +313,6 @@ define(['hue/http-hue', 'hue/light', 'lodash'], function(http, Light, _) {
         );
 
     };
-
 
     return exports;
 });

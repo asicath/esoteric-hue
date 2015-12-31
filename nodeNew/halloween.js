@@ -34,32 +34,47 @@ requirejs([
     var allExcept = function(names) { return function(light) { return !_.contains(names, light.name); }; };
     var only = function(names) { return function(light) { return _.contains(names, light.name); }; };
 
+    var colors = [
+        {name: 'orange',    hue: 3000,  sat: 255, bri: 255}, // sol
+        {name: 'green',     hue: 25500, sat: 255, bri: 100}, // venus
+        //{name: 'indigo',    hue: 47100, sat: 255, bri: 150}, // saturn
+        {name: 'violet',    hue: 48400, sat: 255, bri: 255} // jupiter
+    ];
+
+
     var hub;
 
-    Hub.findAndConnect('10.0.1.', console.log, function(h) {
+    Hub.findAndConnect('10.0.0.', console.log, function(h) {
         hub = h;
 
         console.log('connected');
 
-        swap(only(office));
-        swap(only(livingRoom));
+        swap(only(temple), 0);
 
+        //swap(only(office));
+        //swap(only(livingRoom));
         //swap(only(temple));
     });
 
-    var swap = function(filter) {
+    var swap = function(filter, colorIndex) {
 
-        var transitionTime = Math.floor(Math.random() * 1000) + 10000;
-        var holdTime = 500;
-        var brightness = Math.floor(Math.random() * 200) + 55;
-        var hueValue = Math.floor(Math.random() * 3000) + 45500;
+        var transitionTime = 1000;
+        var holdTime = 60000;
 
-        var state = State.create(true, brightness, Color.createByHS(hueValue, 255));
-        //var state = State.create(true, 200, Color.createByTriangle(0.56, 1.0));
+        var colorInfo = colors[colorIndex];
+        var state = State.create(true, colorInfo.bri, Color.createByHS(colorInfo.hue, colorInfo.sat));
+
         hub.setState(state, filter, transitionTime, function() {
-            console.log('set');
+            console.log(colorInfo.name);
             setTimeout(function() {
-                swap(filter);
+
+                // choose the next color
+                var nextColorIndex = colorIndex;
+                while (nextColorIndex == colorIndex) {
+                    nextColorIndex = Math.floor(Math.random() * colors.length);
+                }
+
+                swap(filter, nextColorIndex);
             }, holdTime + transitionTime);
         });
 

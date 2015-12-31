@@ -7,10 +7,6 @@ define(['jquery'], function($) {
             url: 'http://' + a.host + a.path,
             data: JSON.stringify(a.data),
             type: 'POST'
-        }).done(function(data) {
-            if (a.success) a.success(data);
-        }).fail(function(e) {
-            if (a.fail) a.fail(e);
         });
     };
 
@@ -19,10 +15,6 @@ define(['jquery'], function($) {
             url: 'http://' + a.host + a.path,
             data: JSON.stringify(a.data),
             type: 'PUT'
-        }).done(function(data) {
-            if (a.success) a.success(data);
-        }).fail(function(e) {
-            if (a.fail) a.fail(e);
         });
     };
 
@@ -36,11 +28,7 @@ define(['jquery'], function($) {
             o.data = JSON.stringify(a.data);
         }
 
-        return $.ajax(o).done(function(data) {
-            if (a.success) a.success(data);
-        }).fail(function(e) {
-            if (a.fail) a.fail(e);
-        });
+        return $.ajax(o);
 
     };
 

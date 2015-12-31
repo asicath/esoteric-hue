@@ -26,63 +26,6 @@ requirejs([
     _
 ) {
 
-    var temple = ["Temple 1", "Temple 2"];
-    var office = ["Office W","Office E"];
-    var livingRoom = ["Living Room W","Living Room E"];
-
-    var all = temple.concat(office).concat(livingRoom);
-    var allExcept = function(names) { return function(light) { return !_.contains(names, light.name); }; };
-    var only = function(names) { return function(light) { return _.contains(names, light.name); }; };
-
-    var hub;
-
-    Hub.findAndConnect('10.0.0.', console.log, function(h) {
-        hub = h;
-        console.log('connected');
-        pulseUp(0, only(office.concat(livingRoom.concat(temple))));
-    });
-
-    var hueValue = Math.floor(Math.random() * 3000) + 45500;
-    var color = Color.createByTriangle(0.2287, 1.0);
-    var stateUp = State.create(true, 255, color);
-    var stateDown = State.create(true, 0, color);
-
-    var pulseUp = function(i, filter) {
-        var transitionTime = 1000;
-        var holdtime = 5000;
-        var state = State.create(true, 255, rainbow[i]);
-        hub.setState(state, filter, transitionTime, function() {
-            setTimeout(function() {
-                pulseDown(i, filter);
-            }, holdtime + transitionTime);
-        });
-    };
-
-    var pulseDown = function(i, filter) {
-        var transitionTime = 500;
-        var state = State.create(true, 0, rainbow[i]);
-        hub.setState(state, filter, transitionTime, function() {
-            setTimeout(function() {
-                change(i+1, filter);
-            }, transitionTime);
-        });
-    };
-
-    var change = function(i, filter) {
-
-        if (i >= rainbow.length) {
-            i = 0;
-        }
-
-        var transitionTime = 500;
-        var state = State.create(true, 0, rainbow[i]);
-        hub.setState(state, filter, transitionTime, function() {
-            setTimeout(function() {
-                pulseUp(i, filter);
-            }, transitionTime);
-        });
-    };
-
     var rainbow = [
         Color.createByTriangle(0.00, 1.0),
         Color.createByTriangle(0.05, 1.0),
@@ -92,6 +35,62 @@ requirejs([
         Color.createByTriangle(0.60, 1.0),
         Color.createByTriangle(0.65, 1.0)
     ];
+
+    var bedroom = ["Temple 1", "Temple 2"];
+    var temple = ["Temple 3", "Temple 4"];
+    var office = ["Office W","Office E"];
+    var livingRoom = ["Living Room W","Living Room E"];
+
+    var rooms = [bedroom, livingRoom, office, temple];
+
+    var all = temple.concat(office).concat(livingRoom);
+    var allExcept = function(names) { return function(light) { return !_.contains(names, light.name); }; };
+    var only = function(names) { return function(light) { return _.contains(names, light.name); }; };
+
+    var hub;
+
+    Hub.findAndConnect('10.0.1.', console.log, function(h) {
+        hub = h;
+        console.log('connected');
+        nextColor();
+    });
+
+    var transitionTime = 500;
+    var interval = 250;
+    var wait = 2000;
+    var roomIndex = 0;
+    var colorIndex = 0;
+
+    function nextColor() {
+        roomIndex = 0;
+        colorIndex = (colorIndex + 1) % rainbow.length;
+        nextRoom();
+    }
+
+    function nextRoom() {
+
+        // if we're out of rooms, go to the next color
+        if (roomIndex == rooms.length) {
+            setTimeout(nextColor, wait);
+            return;
+        }
+
+        var state = State.create(true, 200, rainbow[colorIndex]);
+
+        // otherwise set the room color
+        var filter = only(rooms[roomIndex]);
+        roomIndex += 1;
+        hub.setState(state, filter, transitionTime, function() {
+            setTimeout(nextRoom, interval);
+        });
+
+    }
+
+
+
+
+
+
 
 
 });
