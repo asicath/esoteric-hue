@@ -11,12 +11,12 @@ define(['hue/http-hue', 'hue/light', 'lodash'], function(http, Light, _) {
     // search a range of IP address for a hue hub
     exports.find = function(range, success, fail) {
         var errorCount = 0;
-        var number = 0;
+        var number = 100;
         var maxNumber = 0;
         var found = false;
         var xhr = {};
         var next = function() {
-            maxNumber += 40;
+            maxNumber += 10;
             while (number < maxNumber && number < 255) {
 
                 // get the next IP

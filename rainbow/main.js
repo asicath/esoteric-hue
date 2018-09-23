@@ -8,7 +8,8 @@ requirejs.config({
     //the paths config could be for a directory.
     paths: {
         'jquery': 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min',
-        'http-active': 'hue/http-web'
+        'http-active': 'hue/http-web',
+        'lodash': './lodash.min'
     }
 });
 

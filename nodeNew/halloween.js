@@ -29,6 +29,7 @@ requirejs([
     var temple = ["Temple 1", "Temple 2"];
     var office = ["Office W","Office E"];
     var livingRoom = ["Living Room W","Living Room E"];
+    var frontdoor = ['Bedroom 1'];
 
     var all = temple.concat(office).concat(livingRoom);
     var allExcept = function(names) { return function(light) { return !_.contains(names, light.name); }; };
@@ -44,12 +45,12 @@ requirejs([
 
     var hub;
 
-    Hub.findAndConnect('10.0.0.', console.log, function(h) {
+    Hub.findAndConnect('192.168.0.', console.log, function(h) {
         hub = h;
 
         console.log('connected');
 
-        swap(only(temple), 0);
+        swap(only(frontdoor), 0);
 
         //swap(only(office));
         //swap(only(livingRoom));
