@@ -63,6 +63,10 @@ function getAllLights() {
 
 function rainbow() {
     function next() {
+        if (shouldStop) {
+            shouldStop = false;
+            return;
+        }
         turnNextColor();
         setTimeout(next, 2000);
     }
@@ -109,6 +113,14 @@ var rainbowStates = [
     {bri:255, color: Color.createByTriangle(0.65, 1.0)}
 ];
 
+var shouldStop = false;
+function stop() {
+    shouldStop = true;
+}
+function start() {
+    rainbow();
+}
+
 $(function() {
 
     init()
@@ -120,7 +132,7 @@ $(function() {
                 lights[o.name] = key;
             }
         })
-        .then(rainbow)
+        //.then(rainbow)
         .then(function(msg) {
             //$('#msg').html('');
         })
